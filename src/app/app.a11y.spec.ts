@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { axeViolations } from '../testing/axe';
+import { axeViolations } from '@testing/axe';
 import { App } from './app';
 
 describe('App accessibility', () => {
