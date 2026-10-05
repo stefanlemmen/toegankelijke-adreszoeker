@@ -64,25 +64,27 @@ export class AddressSearch {
 
   protected onKeydown(event: KeyboardEvent): void {
     const count = this.options().length;
-
+    const index = this.activeIndex();
     if (count === 0) {
       return;
     }
 
-    if (event.key === 'ArrowDown') {
-      event.preventDefault();
-      this.activeIndex.update((index) => nextIndex(index, count));
+    switch (event.key) {
+      case 'ArrowDown':
+        this.activeIndex.set(nextIndex(index, count));
+        break;
+      case 'ArrowUp':
+        this.activeIndex.set(previousIndex(index, count));
+        break;
+      case 'Enter':
+        if (index === undefined) {
+          return;
+        }
+        this.choose(index);
+        break;
+      default:
+        return;
     }
-
-    if (event.key === 'ArrowUp') {
-      event.preventDefault();
-      this.activeIndex.update((index) => previousIndex(index, count));
-    }
-
-    const index = this.activeIndex();
-    if (event.key === 'Enter' && index !== undefined) {
-      event.preventDefault();
-      this.choose(index);
-    }
+    event.preventDefault();
   }
 }
