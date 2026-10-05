@@ -1,8 +1,12 @@
 // Angular language server from node_modules, via the Zed "Angular" extension.
 {
+  // The extension only recognises `*.component.html` and `*.ng.html` as Angular templates,
+  // not Angular 20+ names like `app.html`; this gives them the Angular grammar and Prettier parser.
+  "file_types": { "Angular": ["**/src/app/**/*.html"] },
   "languages": {
     "TypeScript": { "language_servers": ["angular", "..."] },
-    "HTML": { "language_servers": ["angular", "..."] },
+    // Zed only runs its Prettier for languages that allow it; extension languages don't by default.
+    "Angular": { "formatter": "prettier", "prettier": { "allowed": true } },
     // Zed's own JSONC formatter adds trailing commas, which Prettier rejects.
     "JSONC": { "formatter": "prettier" }
   }
