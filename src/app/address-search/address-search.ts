@@ -31,9 +31,11 @@ export class AddressSearch {
     debounce(path.query, SEARCH_DEBOUNCE_MS);
     minLength(path.query, MIN_QUERY_LENGTH);
   });
-  private readonly validQuery = computed(() =>
-    this.searchForm.query().valid() ? this.searchForm.query().value() : '',
-  );
+  private readonly chosen = signal<string | undefined>(undefined);
+  private readonly validQuery = computed(() => {
+    const query = this.searchForm.query();
+    return query.valid() && query.value() !== this.chosen() ? query.value() : '';
+  });
   protected readonly suggestions = httpResource(() => suggestRequest(this.validQuery()), {
     parse: parseSuggestions,
     defaultValue: [],
@@ -52,6 +54,14 @@ export class AddressSearch {
     return index === undefined ? null : `address-option-${index}`;
   });
   protected readonly expanded = computed(() => this.options().length > 0);
+
+  protected choose(index: number): void {
+    const suggestion = this.options()[index];
+    this.chosen.set(suggestion.weergavenaam);
+    this.searchForm.query().value.set(suggestion.weergavenaam);
+    this.selected.emit(suggestion.id);
+  }
+
   protected onKeydown(event: KeyboardEvent): void {
     const count = this.options().length;
 
@@ -67,6 +77,12 @@ export class AddressSearch {
     if (event.key === 'ArrowUp') {
       event.preventDefault();
       this.activeIndex.update((index) => previousIndex(index, count));
+    }
+
+    const index = this.activeIndex();
+    if (event.key === 'Enter' && index !== undefined) {
+      event.preventDefault();
+      this.choose(index);
     }
   }
 }

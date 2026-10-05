@@ -88,6 +88,44 @@ describe('App', () => {
     expect(activeOptionOf(page, combobox)).toBe('Damrak 1, 1012LG Amsterdam');
   });
 
+  it.each([
+    {
+      how: 'the Enter key',
+      choose: (combobox: HTMLInputElement) => {
+        pressKey(combobox, 'ArrowDown');
+        pressKey(combobox, 'Enter');
+      },
+    },
+    { how: 'a click', choose: () => elementWithText(page, 'Damrak 18-1, Amsterdam').click() },
+  ])('chooses an option with $how without searching again', async ({ choose }) => {
+    const combobox = inputLabelled(page, 'Adres');
+    (await searchFor(page, 'damrak')).flush(SUGGEST_DAMRAK);
+    await advance();
+
+    choose(combobox);
+    await advance();
+    http.expectOne(isLookupRequestFor('adr-damrak-18-1')).flush(LOOKUP_DAMRAK_18_1);
+    await advance(DEBOUNCE_MS);
+    http.expectNone(() => true);
+
+    expect(combobox.value).toBe('Damrak 18-1, Amsterdam');
+    expect(combobox.getAttribute('aria-expanded')).toBe('false');
+    expect(optionsOf(page, combobox)).toEqual([]);
+    expect(activeOptionOf(page, combobox)).toBeUndefined();
+    expect(definitionOf(page, 'Straat')).toBe('Damrak');
+  });
+
+  // jsdom doesn't move focus on a mouse press, so check that the press can't take it away.
+  it('keeps focus in the search field when an option is pressed', async () => {
+    (await searchFor(page, 'damrak')).flush(SUGGEST_DAMRAK);
+    await advance();
+
+    const press = new MouseEvent('mousedown', { bubbles: true, cancelable: true });
+    elementWithText(page, 'Damrak 18-1, Amsterdam').dispatchEvent(press);
+
+    expect(press.defaultPrevented).toBe(true);
+  });
+
   it('shows suggestions for the typed address after the debounce', async () => {
     typeInto(inputLabelled(page, 'Adres'), 'damrak');
 

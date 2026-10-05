@@ -17,12 +17,14 @@
   <ul id="address-suggestions" role="listbox">
     @for (suggestion of options(); track suggestion.id) {
       <!-- Keyboard goes through the combobox (aria-activedescendant), so options aren't focusable (APG). -->
+      <!-- Preventing mousedown keeps focus in the combobox when an option is clicked. -->
       <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -->
       <li
         [id]="'address-option-' + $index"
         role="option"
         [attr.aria-selected]="$index === activeIndex()"
-        (click)="selected.emit(suggestion.id)"
+        (mousedown)="$event.preventDefault()"
+        (click)="choose($index)"
       >
         {{ suggestion.weergavenaam }}
       </li>
