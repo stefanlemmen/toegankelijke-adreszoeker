@@ -1,5 +1,5 @@
 import { httpResource } from '@angular/common/http';
-import { Component, computed, output, signal } from '@angular/core';
+import { Component, computed, linkedSignal, output, signal } from '@angular/core';
 import { debounce, form, FormField, FormRoot, minLength } from '@angular/forms/signals';
 import { parseSuggestions, suggestRequest } from '@app/pdok/suggest';
 
@@ -7,10 +7,19 @@ const SEARCH_DEBOUNCE_MS = 300;
 const MIN_QUERY_LENGTH = 2;
 const SEARCH_ERROR = 'Er ging iets mis bij het zoeken. Probeer het opnieuw.';
 
+function nextIndex(index: number | undefined, count: number): number {
+  return index === undefined ? 0 : (index + 1) % count;
+}
+
+function previousIndex(index: number | undefined, count: number): number {
+  return index === undefined ? count - 1 : (index - 1 + count) % count;
+}
+
 @Component({
   selector: 'app-address-search',
   imports: [FormField, FormRoot],
   templateUrl: './address-search.html',
+  styleUrl: './address-search.css',
 })
 export class AddressSearch {
   /** The id of the chosen suggestion. */
@@ -33,5 +42,31 @@ export class AddressSearch {
   protected readonly options = computed(() =>
     this.suggestions.hasValue() ? this.suggestions.value() : [],
   );
+  protected readonly activeIndex = linkedSignal({
+    source: this.options,
+    computation: (): number | undefined => undefined,
+  });
+
+  protected readonly activeDescendant = computed(() => {
+    const index = this.activeIndex();
+    return index === undefined ? null : `address-option-${index}`;
+  });
   protected readonly expanded = computed(() => this.options().length > 0);
+  protected onKeydown(event: KeyboardEvent): void {
+    const count = this.options().length;
+
+    if (count === 0) {
+      return;
+    }
+
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      this.activeIndex.update((index) => nextIndex(index, count));
+    }
+
+    if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      this.activeIndex.update((index) => previousIndex(index, count));
+    }
+  }
 }

@@ -55,3 +55,20 @@ export function optionsOf(root: HTMLElement, combobox: HTMLElement): string[] {
     (option) => option.textContent?.trim() ?? '',
   );
 }
+
+export function pressKey(element: HTMLElement, key: string): void {
+  element.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
+}
+
+/** The text of the option `aria-activedescendant` points to, checked to be the only selected one. */
+export function activeOptionOf(root: HTMLElement, combobox: HTMLElement): string | undefined {
+  const id = combobox.getAttribute('aria-activedescendant');
+  if (!id) {
+    return undefined;
+  }
+  const selected = [...root.querySelectorAll('[role="option"][aria-selected="true"]')];
+  if (selected.length !== 1 || selected[0].id !== id) {
+    throw new Error(`Option "${id}" is not the only option with aria-selected="true"`);
+  }
+  return selected[0].textContent?.trim() ?? '';
+}

@@ -9,6 +9,8 @@
       aria-autocomplete="list"
       aria-controls="address-suggestions"
       [attr.aria-expanded]="expanded()"
+      [attr.aria-activedescendant]="activeDescendant()"
+      (keydown)="onKeydown($event)"
       data-1p-ignore
     />
   </form>
@@ -16,7 +18,12 @@
     @for (suggestion of options(); track suggestion.id) {
       <!-- Keyboard goes through the combobox (aria-activedescendant), so options aren't focusable (APG). -->
       <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -->
-      <li role="option" aria-selected="false" (click)="selected.emit(suggestion.id)">
+      <li
+        [id]="'address-option-' + $index"
+        role="option"
+        [attr.aria-selected]="$index === activeIndex()"
+        (click)="selected.emit(suggestion.id)"
+      >
         {{ suggestion.weergavenaam }}
       </li>
     }

@@ -6,11 +6,13 @@ import {
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import {
+  activeOptionOf,
   advance,
   definitionOf,
   elementWithText,
   inputLabelled,
   optionsOf,
+  pressKey,
   typeInto,
 } from '@testing/dom';
 import { LOOKUP_DAMRAK_18_1, LOOKUP_NOT_FOUND, SUGGEST_DAMRAK } from '@testing/pdok-fixtures';
@@ -60,6 +62,30 @@ describe('App', () => {
       'Damrak 201, Amsterdam',
       'Damrak 1, 1012LG Amsterdam',
     ]);
+  });
+
+  it('moves the active option with the arrow keys, wrapping at both ends', async () => {
+    const combobox = inputLabelled(page, 'Adres');
+    (await searchFor(page, 'damrak')).flush(SUGGEST_DAMRAK);
+    await advance();
+    expect(activeOptionOf(page, combobox)).toBeUndefined();
+
+    pressKey(combobox, 'ArrowDown');
+    await advance();
+    expect(activeOptionOf(page, combobox)).toBe('Damrak 18-1, Amsterdam');
+
+    pressKey(combobox, 'ArrowDown');
+    pressKey(combobox, 'ArrowDown');
+    await advance();
+    expect(activeOptionOf(page, combobox)).toBe('Damrak 1, 1012LG Amsterdam');
+
+    pressKey(combobox, 'ArrowDown');
+    await advance();
+    expect(activeOptionOf(page, combobox)).toBe('Damrak 18-1, Amsterdam');
+
+    pressKey(combobox, 'ArrowUp');
+    await advance();
+    expect(activeOptionOf(page, combobox)).toBe('Damrak 1, 1012LG Amsterdam');
   });
 
   it('shows suggestions for the typed address after the debounce', async () => {
