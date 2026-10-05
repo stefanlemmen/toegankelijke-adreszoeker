@@ -4,7 +4,9 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "types": ["vitest/globals"],
+    // Replaces the base `paths`, so `@app/*` is repeated here.
     "paths": {
+      "@app/*": ["./src/app/*"],
       "@testing/*": ["./src/testing/*"]
     }
   },
