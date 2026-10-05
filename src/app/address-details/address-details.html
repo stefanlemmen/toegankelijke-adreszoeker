@@ -1,0 +1,16 @@
+@if (address.error()) {
+  <p>{{ lookupError }}</p>
+} @else if (address.hasValue()) {
+  <dl>
+    <dt>Straat</dt>
+    <dd>{{ address.value().straatnaam }}</dd>
+    <dt>Huisnummer</dt>
+    <dd>{{ address.value().huis_nlt }}</dd>
+    <dt>Postcode</dt>
+    <dd>{{ address.value().postcode ?? unknown }}</dd>
+    <dt>Woonplaats</dt>
+    <dd>{{ address.value().woonplaatsnaam }}</dd>
+    <dt>Gemeente</dt>
+    <dd>{{ address.value().gemeentenaam }}</dd>
+  </dl>
+}
