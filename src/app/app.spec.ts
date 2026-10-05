@@ -5,7 +5,14 @@ import {
   TestRequest,
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { advance, definitionOf, elementWithText, inputLabelled, typeInto } from '@testing/dom';
+import {
+  advance,
+  definitionOf,
+  elementWithText,
+  inputLabelled,
+  optionsOf,
+  typeInto,
+} from '@testing/dom';
 import { LOOKUP_DAMRAK_18_1, LOOKUP_NOT_FOUND, SUGGEST_DAMRAK } from '@testing/pdok-fixtures';
 import { isLookupRequestFor, isSuggestRequestFor } from '@testing/pdok-requests';
 import { App } from './app';
@@ -36,6 +43,23 @@ describe('App', () => {
   afterEach(() => {
     http.verify();
     vi.useRealTimers();
+  });
+
+  it('presents the search field as a combobox that controls a list of options', async () => {
+    const combobox = inputLabelled(page, 'Adres');
+    expect(combobox.getAttribute('role')).toBe('combobox');
+    expect(combobox.getAttribute('aria-autocomplete')).toBe('list');
+    expect(combobox.getAttribute('aria-expanded')).toBe('false');
+
+    (await searchFor(page, 'damrak')).flush(SUGGEST_DAMRAK);
+    await advance();
+
+    expect(combobox.getAttribute('aria-expanded')).toBe('true');
+    expect(optionsOf(page, combobox)).toEqual([
+      'Damrak 18-1, Amsterdam',
+      'Damrak 201, Amsterdam',
+      'Damrak 1, 1012LG Amsterdam',
+    ]);
   });
 
   it('shows suggestions for the typed address after the debounce', async () => {

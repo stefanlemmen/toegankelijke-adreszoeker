@@ -43,3 +43,15 @@ export function definitionOf(root: HTMLElement, term: string): string {
   }
   return dd.textContent?.trim() ?? '';
 }
+
+/** The option texts in the listbox that `combobox` controls through `aria-controls`. */
+export function optionsOf(root: HTMLElement, combobox: HTMLElement): string[] {
+  const id = combobox.getAttribute('aria-controls');
+  const listbox = [...root.querySelectorAll('[id]')].find((element) => element.id === id);
+  if (!id || listbox?.getAttribute('role') !== 'listbox') {
+    throw new Error('No listbox controlled by the combobox');
+  }
+  return [...listbox.querySelectorAll('[role="option"]')].map(
+    (option) => option.textContent?.trim() ?? '',
+  );
+}

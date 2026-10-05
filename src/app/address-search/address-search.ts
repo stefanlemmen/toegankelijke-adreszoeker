@@ -29,4 +29,9 @@ export class AddressSearch {
     parse: parseSuggestions,
     defaultValue: [],
   });
+
+  protected readonly options = computed(() =>
+    this.suggestions.hasValue() ? this.suggestions.value() : [],
+  );
+  protected readonly expanded = computed(() => this.options().length > 0);
 }
