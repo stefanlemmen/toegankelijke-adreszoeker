@@ -1,0 +1,9 @@
+// Angular language server from node_modules, via the Zed "Angular" extension.
+{
+  "languages": {
+    "TypeScript": { "language_servers": ["angular", "..."] },
+    "HTML": { "language_servers": ["angular", "..."] },
+    // Zed's own JSONC formatter adds trailing commas, which Prettier rejects.
+    "JSONC": { "formatter": "prettier" }
+  }
+}
