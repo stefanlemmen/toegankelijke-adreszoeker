@@ -64,45 +64,41 @@ export class AddressSearch {
     this.selected.emit(suggestion.id);
   }
 
+  private readonly keyActions: Record<string, () => void> = {
+    ArrowDown: () => this.moveActive(nextIndex),
+    ArrowUp: () => this.moveActive(previousIndex),
+    'Alt+ArrowDown': () => this.closed.set(false),
+    Enter: () => this.chooseActive(),
+    Escape: () => this.closeOrClear(),
+  };
+
   protected onKeydown(event: KeyboardEvent): void {
-    const count = this.options().length;
-    const index = this.activeIndex();
-
-    if (event.key === 'Escape') {
-      if (count > 0) {
-        this.closed.set(true);
-      } else {
-        this.searchForm.query().value.set('');
-      }
-      return;
-    }
-
-    if (event.key === 'ArrowDown' && event.altKey) {
+    const action = this.keyActions[event.altKey ? `Alt+${event.key}` : event.key];
+    if (action) {
       event.preventDefault();
-      this.closed.set(false);
-      return;
+      action();
     }
+  }
 
-    if (count === 0) {
-      return;
+  private moveActive(step: (index: number | undefined, count: number) => number): void {
+    const count = this.options().length;
+    if (count > 0) {
+      this.activeIndex.update((index) => step(index, count));
     }
+  }
 
-    switch (event.key) {
-      case 'ArrowDown':
-        this.activeIndex.set(nextIndex(index, count));
-        break;
-      case 'ArrowUp':
-        this.activeIndex.set(previousIndex(index, count));
-        break;
-      case 'Enter':
-        if (index === undefined) {
-          return;
-        }
-        this.choose(index);
-        break;
-      default:
-        return;
+  private chooseActive(): void {
+    const index = this.activeIndex();
+    if (index !== undefined) {
+      this.choose(index);
     }
-    event.preventDefault();
+  }
+
+  private closeOrClear(): void {
+    if (this.expanded()) {
+      this.closed.set(true);
+    } else {
+      this.searchForm.query().value.set('');
+    }
   }
 }
