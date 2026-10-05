@@ -1,3 +1,39 @@
 <main>
   <h1>Adreszoeker</h1>
+  <search>
+    <form [formRoot]="searchForm" autocomplete="off">
+      <label for="query">Adres</label>
+      <input type="text" id="query" [formField]="searchForm.query" data-1p-ignore />
+    </form>
+    @if (suggestions.error()) {
+      <p>{{ searchError }}</p>
+    } @else {
+      <ul>
+        @for (suggestion of suggestions.value(); track suggestion.id) {
+          <li>
+            <button type="button" (click)="selectedId.set(suggestion.id)">
+              {{ suggestion.weergavenaam }}
+            </button>
+          </li>
+        }
+      </ul>
+    }
+  </search>
+
+  @if (address.error()) {
+    <p>{{ lookupError }}</p>
+  } @else if (address.hasValue()) {
+    <dl>
+      <dt>Straat</dt>
+      <dd>{{ address.value().straatnaam }}</dd>
+      <dt>Huisnummer</dt>
+      <dd>{{ address.value().huis_nlt }}</dd>
+      <dt>Postcode</dt>
+      <dd>{{ address.value().postcode ?? unknown }}</dd>
+      <dt>Woonplaats</dt>
+      <dd>{{ address.value().woonplaatsnaam }}</dd>
+      <dt>Gemeente</dt>
+      <dd>{{ address.value().gemeentenaam }}</dd>
+    </dl>
+  }
 </main>

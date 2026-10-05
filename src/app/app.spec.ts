@@ -54,15 +54,11 @@ describe('App', () => {
   });
 
   it('only searches from 2 characters', async () => {
-    const input = inputLabelled(page, 'Adres');
-
-    typeInto(input, 'd');
+    typeInto(inputLabelled(page, 'Adres'), 'd');
     await advance(DEBOUNCE_MS);
-    http.expectNone(isSuggestRequestFor('d'));
+    http.expectNone(() => true);
 
-    typeInto(input, 'da');
-    await advance(DEBOUNCE_MS);
-    http.expectOne(isSuggestRequestFor('da'));
+    await searchFor(page, 'da');
   });
 
   it('shows the details of the chosen address', async () => {
