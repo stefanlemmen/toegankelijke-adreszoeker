@@ -137,6 +137,26 @@ describe('App', () => {
     expect(combobox.getAttribute('aria-expanded')).toBe('true');
   });
 
+  it('opens the closed list with Alt+ArrowDown without making an option active', async () => {
+    const combobox = inputLabelled(page, 'Adres');
+    (await searchFor(page, 'damrak')).flush(SUGGEST_DAMRAK);
+    await advance();
+    pressKey(combobox, 'Escape');
+    await advance();
+
+    pressKey(combobox, 'ArrowDown', { altKey: true });
+    await advance();
+
+    expect(combobox.getAttribute('aria-expanded')).toBe('true');
+    expect(optionsOf(page, combobox)).toHaveLength(3);
+    expect(activeOptionOf(page, combobox)).toBeUndefined();
+
+    pressKey(combobox, 'ArrowDown', { altKey: true });
+    await advance();
+
+    expect(activeOptionOf(page, combobox)).toBeUndefined();
+  });
+
   it('clears the field with a second Escape', async () => {
     const combobox = inputLabelled(page, 'Adres');
     (await searchFor(page, 'damrak')).flush(SUGGEST_DAMRAK);

@@ -56,8 +56,14 @@ export function optionsOf(root: HTMLElement, combobox: HTMLElement): string[] {
   );
 }
 
-export function pressKey(element: HTMLElement, key: string): void {
-  element.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
+export function pressKey(
+  element: HTMLElement,
+  key: string,
+  modifiers: KeyboardEventInit = {},
+): void {
+  element.dispatchEvent(
+    new KeyboardEvent('keydown', { ...modifiers, key, bubbles: true, cancelable: true }),
+  );
 }
 
 /** The text of the option `aria-activedescendant` points to, checked to be the only selected one. */

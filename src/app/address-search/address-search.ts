@@ -77,6 +77,12 @@ export class AddressSearch {
       return;
     }
 
+    if (event.key === 'ArrowDown' && event.altKey) {
+      event.preventDefault();
+      this.closed.set(false);
+      return;
+    }
+
     if (count === 0) {
       return;
     }
