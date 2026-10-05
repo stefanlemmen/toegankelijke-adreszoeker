@@ -115,6 +115,42 @@ describe('App', () => {
     expect(definitionOf(page, 'Straat')).toBe('Damrak');
   });
 
+  it('closes the list with Escape and opens it again when typing', async () => {
+    const combobox = inputLabelled(page, 'Adres');
+    (await searchFor(page, 'damrak')).flush(SUGGEST_DAMRAK);
+    await advance();
+
+    pressKey(combobox, 'ArrowDown');
+    pressKey(combobox, 'Escape');
+    pressKey(combobox, 'ArrowDown');
+    pressKey(combobox, 'Enter');
+    await advance();
+
+    expect(combobox.value).toBe('damrak');
+    expect(combobox.getAttribute('aria-expanded')).toBe('false');
+    expect(optionsOf(page, combobox)).toEqual([]);
+    expect(activeOptionOf(page, combobox)).toBeUndefined();
+
+    (await searchFor(page, 'damra')).flush(SUGGEST_DAMRAK);
+    await advance();
+
+    expect(combobox.getAttribute('aria-expanded')).toBe('true');
+  });
+
+  it('clears the field with a second Escape', async () => {
+    const combobox = inputLabelled(page, 'Adres');
+    (await searchFor(page, 'damrak')).flush(SUGGEST_DAMRAK);
+    await advance();
+
+    pressKey(combobox, 'Escape');
+    await advance();
+    pressKey(combobox, 'Escape');
+    await advance(DEBOUNCE_MS);
+
+    expect(combobox.value).toBe('');
+    expect(combobox.getAttribute('aria-expanded')).toBe('false');
+  });
+
   // jsdom doesn't move focus on a mouse press, so check that the press can't take it away.
   it('keeps focus in the search field when an option is pressed', async () => {
     (await searchFor(page, 'damrak')).flush(SUGGEST_DAMRAK);

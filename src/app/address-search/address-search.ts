@@ -41,9 +41,11 @@ export class AddressSearch {
     defaultValue: [],
   });
 
-  protected readonly options = computed(() =>
+  private readonly results = computed(() =>
     this.suggestions.hasValue() ? this.suggestions.value() : [],
   );
+  private readonly closed = linkedSignal({ source: this.results, computation: () => false });
+  protected readonly options = computed(() => (this.closed() ? [] : this.results()));
   protected readonly activeIndex = linkedSignal({
     source: this.options,
     computation: (): number | undefined => undefined,
@@ -65,6 +67,16 @@ export class AddressSearch {
   protected onKeydown(event: KeyboardEvent): void {
     const count = this.options().length;
     const index = this.activeIndex();
+
+    if (event.key === 'Escape') {
+      if (count > 0) {
+        this.closed.set(true);
+      } else {
+        this.searchForm.query().value.set('');
+      }
+      return;
+    }
+
     if (count === 0) {
       return;
     }
