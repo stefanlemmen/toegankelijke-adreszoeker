@@ -38,7 +38,7 @@ Een screenreader ziet geen kleuren of posities, alleen wat de HTML erover vertel
 - **`aria-activedescendant`**: verwijst naar de suggestie die je met de pijltjestoetsen hebt gemarkeerd. Zo leest de screenreader die suggestie voor, terwijl de focus in het veld blijft.
 - **`role="listbox"`** en **`role="option"`**: de lijst en de suggesties erin.
 - **`aria-selected="true"`**: markeert de actieve suggestie. Visueel krijgt die ook een rand, dus niet alleen een andere kleur.
-- **`aria-describedby`**: koppelt de hint "Bijvoorbeeld: Damrak 1 Amsterdam" aan het veld, zodat de screenreader die voorleest zodra het veld de focus krijgt.
+- **`aria-describedby`**: koppelt de hint "Minimaal 2 tekens, bijvoorbeeld: Damrak 1 Amsterdam" aan het veld, zodat de screenreader die voorleest zodra het veld de focus krijgt.
 - **`role="status"`**: een vaste regel onder het veld voor meldingen ("Zoeken…", "3 adressen gevonden", "Geen adressen gevonden", foutmeldingen). De screenreader leest die voor zonder dat de focus verspringt. De regel staat er altijd, ook leeg, omdat screenreaders een melding kunnen missen als de regel tegelijk met de tekst verschijnt.
 
 **Waarom de focus in het veld blijft:** zo kun je gewoon doortypen of je zoekvraag verbeteren terwijl je door de suggesties loopt. De suggesties zelf zijn daarom niet met Tab bereikbaar; dat is bewust en volgens het patroon.
@@ -51,18 +51,18 @@ Bron: [WAI-ARIA Authoring Practices, Combobox Pattern](https://www.w3.org/WAI/AR
 
 Zo klinkt de adreszoeker met VoiceOver in Safari op macOS (oktober 2026). VoiceOver spreekt de paginatekst in het Nederlands uit, maar woorden als "combo box" en "collapsed" in de taal van macOS; die stond bij deze test op Engels.
 
-| Wat je doet                        | Wat VoiceOver zegt                                                                      |
-| ---------------------------------- | --------------------------------------------------------------------------------------- |
-| Met Tab naar het zoekveld          | "Adres Bijvoorbeeld: Damrak 1 Amsterdam, list box pop-up, collapsed, combo box, search" |
-| `damrak` typen                     | "expanded, list 10 items"                                                               |
-| ↓                                  | "Damrak 18-1, Amsterdam, selected, (1 of 10)"                                           |
-| Nog een keer ↓                     | "Damrak 201, Amsterdam, selected, (2 of 10)"                                            |
-| ↑                                  | "Damrak 18-1, Amsterdam, selected, (1 of 10)"                                           |
-| Enter                              | "collapsed, Damrak 18-1, Amsterdam"                                                     |
-| Opnieuw `damrak` typen, dan Escape | "collapsed, damrak"                                                                     |
-| Nog een keer Escape                | "Zoekveld gewist"                                                                       |
-| `xqzvw` typen (bestaat niet)       | "Geen adressen gevonden"                                                                |
-| Rotor (VO+U), Landmarks            | `main`, `search` en `content information`                                               |
+| Wat je doet                        | Wat VoiceOver zegt                                                                                        |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| Met Tab naar het zoekveld          | "Adres Minimaal 2 tekens, bijvoorbeeld: Damrak 1 Amsterdam, list box pop-up collapsed, combo box, search" |
+| `damrak` typen                     | "expanded, list 10 items"                                                                                 |
+| ↓                                  | "Damrak 18-1, Amsterdam, selected, (1 of 10)"                                                             |
+| Nog een keer ↓                     | "Damrak 201, Amsterdam, selected, (2 of 10)"                                                              |
+| ↑                                  | "Damrak 18-1, Amsterdam, selected, (1 of 10)"                                                             |
+| Enter                              | "collapsed, Damrak 18-1, Amsterdam"                                                                       |
+| Opnieuw `damrak` typen, dan Escape | "collapsed, damrak"                                                                                       |
+| Nog een keer Escape                | "Zoekveld gewist"                                                                                         |
+| `xqzvw` typen (bestaat niet)       | "Geen adressen gevonden"                                                                                  |
+| Rotor (VO+U), Landmarks            | `main`, `search` en `content information`                                                                 |
 
 De gekozen details lees je daarna met VO+→ als "description list 5 items", gevolgd door elk label en elke waarde.
 
@@ -137,7 +137,7 @@ Als er resultaten zijn, zegt VoiceOver "expanded, list 10 items" en slaat het de
 | 3.2.3 Consistent Navigation                                | AA     | N.v.t.    | Eén pagina.                                                                                                                                          |
 | 3.2.4 Consistent Identification                            | AA     | N.v.t.    | Eén pagina.                                                                                                                                          |
 | 3.3.1 Error Identification                                 | A      | Voldoet   | Fouten bij zoeken en ophalen staan als tekst in een statusmelding.                                                                                   |
-| 3.3.2 Labels or Instructions                               | A      | Voldoet   | Label "Adres" met een voorbeeld.                                                                                                                     |
+| 3.3.2 Labels or Instructions                               | A      | Voldoet   | Label "Adres" met de minimale lengte en een voorbeeld.                                                                                               |
 | 3.3.3 Error Suggestion                                     | AA     | Voldoet   | Foutmeldingen zeggen wat je kunt doen: "Probeer het opnieuw."                                                                                        |
 | 3.3.4 Error Prevention (Legal, Financial, Data)            | AA     | N.v.t.    | Geen juridische of financiële handelingen; er wordt niets opgeslagen.                                                                                |
 | 4.1.1 Parsing                                              | A      | Voldoet   | Geldt voor HTML altijd als voldaan (WCAG 2.1, noot bij 4.1.1).                                                                                       |
