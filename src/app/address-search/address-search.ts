@@ -122,7 +122,7 @@ export class AddressSearch {
     if (this.expanded()) {
       this.closed.set(true);
     } else {
-      this.searchForm.query().value.set('');
+      this.searchForm.query().reset('');
     }
   }
 }
