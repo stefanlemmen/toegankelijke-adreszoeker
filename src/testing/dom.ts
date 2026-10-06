@@ -56,6 +56,25 @@ export function optionsOf(root: HTMLElement, combobox: HTMLElement): string[] {
   );
 }
 
+/** The texts of the elements `element` refers to through `aria-describedby`, joined by a space. */
+export function descriptionOf(root: HTMLElement, element: HTMLElement): string {
+  const ids = element.getAttribute('aria-describedby')?.split(/\s+/).filter(Boolean) ?? [];
+  if (ids.length === 0) {
+    throw new Error('Element has no aria-describedby');
+  }
+  return ids
+    .map((id) => {
+      const description = [...root.querySelectorAll('[id]')].find(
+        (candidate) => candidate.id === id,
+      );
+      if (!description) {
+        throw new Error(`No element with id "${id}" for aria-describedby`);
+      }
+      return description.textContent?.trim() ?? '';
+    })
+    .join(' ');
+}
+
 export function pressKey(
   element: HTMLElement,
   key: string,

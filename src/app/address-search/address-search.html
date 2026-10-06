@@ -1,6 +1,7 @@
 <search>
   <form [formRoot]="searchForm" autocomplete="off">
     <label for="query">Adres</label>
+    <p id="query-hint">Bijvoorbeeld: Damrak 1 Amsterdam</p>
     <input
       type="text"
       id="query"
@@ -8,6 +9,7 @@
       role="combobox"
       aria-autocomplete="list"
       aria-controls="address-suggestions"
+      aria-describedby="query-hint"
       [attr.aria-expanded]="expanded()"
       [attr.aria-activedescendant]="activeDescendant()"
       (keydown)="onKeydown($event)"

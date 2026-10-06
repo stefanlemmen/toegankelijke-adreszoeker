@@ -9,6 +9,7 @@ import {
   activeOptionOf,
   advance,
   definitionOf,
+  descriptionOf,
   elementWithText,
   inputLabelled,
   optionsOf,
@@ -62,6 +63,11 @@ describe('App', () => {
       'Damrak 201, Amsterdam',
       'Damrak 1, 1012LG Amsterdam',
     ]);
+  });
+
+  it('describes the search field with an example address', () => {
+    const combobox = inputLabelled(page, 'Adres');
+    expect(descriptionOf(page, combobox)).toBe('Bijvoorbeeld: Damrak 1 Amsterdam');
   });
 
   it('moves the active option with the arrow keys, wrapping at both ends', async () => {
