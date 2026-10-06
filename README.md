@@ -47,6 +47,27 @@ Daarnaast heeft de pagina twee landmarks, `<main>` en `<search>`, zodat je met d
 
 Bron: [WAI-ARIA Authoring Practices, Combobox Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/).
 
+### Wat een screenreader zegt
+
+Zo klinkt de adreszoeker met VoiceOver in Safari op macOS (oktober 2026). VoiceOver spreekt de paginatekst in het Nederlands uit, maar woorden als "combo box" en "collapsed" in de taal van macOS; die stond bij deze test op Engels.
+
+| Wat je doet                        | Wat VoiceOver zegt                                                                      |
+| ---------------------------------- | --------------------------------------------------------------------------------------- |
+| Met Tab naar het zoekveld          | "Adres Bijvoorbeeld: Damrak 1 Amsterdam, list box pop-up, collapsed, combo box, search" |
+| `damrak` typen                     | "expanded, list 10 items"                                                               |
+| ↓                                  | "Damrak 18-1, Amsterdam, selected, (1 of 10)"                                           |
+| Nog een keer ↓                     | "Damrak 201, Amsterdam, selected, (2 of 10)"                                            |
+| ↑                                  | "Damrak 18-1, Amsterdam, selected, (1 of 10)"                                           |
+| Enter                              | "collapsed, Damrak 18-1, Amsterdam"                                                     |
+| Opnieuw `damrak` typen, dan Escape | "collapsed, damrak"                                                                     |
+| Nog een keer Escape                | "Zoekveld gewist"                                                                       |
+| `xqzvw` typen (bestaat niet)       | "Geen adressen gevonden"                                                                |
+| Rotor (VO+U), Landmarks            | `main` en `search`                                                                      |
+
+De gekozen details lees je daarna met VO+→ als "description list 5 items", gevolgd door elk label en elke waarde.
+
+Als er resultaten zijn, zegt VoiceOver "expanded, list 10 items" en slaat het de statusmelding "10 adressen gevonden" over; het aantal hoor je dus via de lijst. Zonder lijst, zoals bij "Geen adressen gevonden" of "Zoekveld gewist", leest VoiceOver de statusmelding wel voor.
+
 ### Toegankelijkheidsverklaring
 
 **Doel:** [WCAG 2.1](https://www.w3.org/TR/WCAG21/) niveau AA.
@@ -57,7 +78,7 @@ Bron: [WAI-ARIA Authoring Practices, Combobox Pattern](https://www.w3.org/WAI/AR
 - Lighthouse 13.5.0: toegankelijkheidsscore 100, in de lichte én de donkere weergave (begintoestand van de pagina).
 - Contrast handmatig gemeten in licht en donker: tekst minstens 15:1, hint en status minstens 7:1, randen en focusring minstens 5:1.
 - Weergave op 320 pixels breed (WCAG 1.4.10), met vergrote tekstafstand (1.4.12) en met 200% tekstgrootte (1.4.4): geen horizontaal scrollen en geen verlies van inhoud.
-- Toetsenbord en focusvolgorde in Chrome; landmarks met VoiceOver in Safari.
+- Handmatig: toetsenbord en focusvolgorde in Chrome en Safari; de hele zoekflow met VoiceOver in Safari (zie hierboven).
 
 **Bekende beperkingen:**
 
@@ -91,7 +112,7 @@ npm run build
 
 ## Gemaakt met AI
 
-Ik heb dit project gebouwd met Claude Code als pair programmer. De componenten heb ik zelf geschreven; Claude schreef de tests (test-first), reviewde mijn code en zette CI, deploy en een eerste versie van deze README op. Elke keuze en elke commit heb ik zelf beoordeeld, en de toegankelijkheid heb ik zelf gecontroleerd.
+Ik heb dit project gebouwd met Claude Code als pair programmer. De componenten heb ik zelf geschreven; Claude schreef de tests (test-first), reviewde mijn code en zette CI, deploy en een eerste versie van deze README op. Elke keuze en elke commit heb ik zelf beoordeeld, en de toegankelijkheid heb ik zelf met toetsenbord en VoiceOver gecontroleerd.
 
 ## Bronnen en licentie
 
