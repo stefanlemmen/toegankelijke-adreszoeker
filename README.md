@@ -70,12 +70,12 @@ Als er resultaten zijn, zegt VoiceOver "expanded, list 10 items" en slaat het de
 
 ### Toegankelijkheidsverklaring
 
-**Doel:** [WCAG 2.1](https://www.w3.org/TR/WCAG21/) niveau AA.
+**Status:** voldoet aan [WCAG 2.1](https://www.w3.org/TR/WCAG21/) niveau AA. Eigen beoordeling op 6 oktober 2026, per succescriterium: alle 50 criteria van niveau A en AA (zie [de tabel](#per-succescriterium)). Geen onafhankelijke audit.
 
 **Testmethode:**
 
 - Geautomatiseerd: elke componenttest controleert de pagina met axe-core 4.13.0, in elke toestand (leeg, zoeken, resultaten, lijst open, details, foutmeldingen).
-- Lighthouse 13.5.0: toegankelijkheidsscore 100, in de lichte én de donkere weergave (begintoestand van de pagina).
+- Lighthouse 13.5.0 op de live site: toegankelijkheidsscore 100, in de lichte én de donkere weergave (begintoestand van de pagina).
 - Contrast handmatig gemeten in licht en donker: tekst minstens 15:1, hint en status minstens 7:1, randen en focusring minstens 5:1.
 - Weergave op 320 pixels breed (WCAG 1.4.10), met vergrote tekstafstand (1.4.12) en met 200% tekstgrootte (1.4.4): geen horizontaal scrollen en geen verlies van inhoud.
 - Handmatig: toetsenbord en focusvolgorde in Chrome en Safari; de hele zoekflow met VoiceOver in Safari (zie hierboven).
@@ -88,6 +88,61 @@ Als er resultaten zijn, zegt VoiceOver "expanded, list 10 items" en slaat het de
 - De adresgegevens en de tekst van de suggesties komen van PDOK; daar heeft deze app geen invloed op.
 
 **Probleem gevonden?** Meld het via een [issue in deze repository](https://github.com/stefanlemmen/toegankelijke-adreszoeker/issues/new).
+
+#### Per succescriterium
+
+| Criterium                                                  | Niveau | Resultaat | Toelichting                                                                                                                                          |
+| ---------------------------------------------------------- | ------ | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1.1.1 Non-text Content                                     | A      | Voldoet   | Het enige niet-tekstuele element is het GitHub-icoon naast de linktekst; dat is decoratief en verborgen voor screenreaders.                          |
+| 1.2.1 Audio-only and Video-only (Prerecorded)              | A      | N.v.t.    | Geen audio of video.                                                                                                                                 |
+| 1.2.2 Captions (Prerecorded)                               | A      | N.v.t.    | Geen video.                                                                                                                                          |
+| 1.2.3 Audio Description or Media Alternative (Prerecorded) | A      | N.v.t.    | Geen video.                                                                                                                                          |
+| 1.2.4 Captions (Live)                                      | AA     | N.v.t.    | Geen live media.                                                                                                                                     |
+| 1.2.5 Audio Description (Prerecorded)                      | AA     | N.v.t.    | Geen video.                                                                                                                                          |
+| 1.3.1 Info and Relationships                               | A      | Voldoet   | Label en hint gekoppeld aan het zoekveld; lijst als `listbox` met `option`s; details als beschrijvingslijst; landmarks `main`, `search` en `footer`. |
+| 1.3.2 Meaningful Sequence                                  | A      | Voldoet   | De volgorde in de code is gelijk aan de zichtbare volgorde.                                                                                          |
+| 1.3.3 Sensory Characteristics                              | A      | Voldoet   | Instructies verwijzen niet naar vorm, plek of geluid.                                                                                                |
+| 1.3.4 Orientation                                          | AA     | Voldoet   | Werkt staand en liggend; de oriëntatie ligt niet vast.                                                                                               |
+| 1.3.5 Identify Input Purpose                               | AA     | N.v.t.    | Het zoekveld vraagt een willekeurig adres, geen gegevens over de gebruiker zelf.                                                                     |
+| 1.4.1 Use of Color                                         | A      | Voldoet   | De actieve suggestie heeft een rand én een achtergrondkleur; de link is onderstreept.                                                                |
+| 1.4.2 Audio Control                                        | A      | N.v.t.    | Geen audio.                                                                                                                                          |
+| 1.4.3 Contrast (Minimum)                                   | AA     | Voldoet   | Tekst minstens 15:1, hint en status minstens 7:1, link in de footer 7,3:1; licht en donker.                                                          |
+| 1.4.4 Resize Text                                          | AA     | Voldoet   | 200% tekstgrootte zonder verlies van inhoud (zie bekende beperkingen over browserzoom).                                                              |
+| 1.4.5 Images of Text                                       | AA     | Voldoet   | Geen afbeeldingen van tekst.                                                                                                                         |
+| 1.4.10 Reflow                                              | AA     | Voldoet   | Op 320 pixels breed geen horizontaal scrollen, ook met de lijst en de details open.                                                                  |
+| 1.4.11 Non-text Contrast                                   | AA     | Voldoet   | Rand van het zoekveld minstens 5:1; focusring en actieve suggestie minstens 8:1.                                                                     |
+| 1.4.12 Text Spacing                                        | AA     | Voldoet   | Met vergrote tekstafstand op 320 pixels wordt niets afgesneden; een lange waarde scrolt binnen het zoekveld, zoals in elk tekstveld.                 |
+| 1.4.13 Content on Hover or Focus                           | AA     | N.v.t.    | De lijst verschijnt door typen, niet door hover of focus.                                                                                            |
+| 2.1.1 Keyboard                                             | A      | Voldoet   | Zoeken, kiezen, sluiten en wissen werken met het toetsenbord (zie [Bediening met het toetsenbord](#bediening-met-het-toetsenbord)).                  |
+| 2.1.2 No Keyboard Trap                                     | A      | Voldoet   | Tab en Shift+Tab verlaten het zoekveld altijd.                                                                                                       |
+| 2.1.4 Character Key Shortcuts                              | A      | N.v.t.    | Geen sneltoetsen met letters, cijfers of leestekens.                                                                                                 |
+| 2.2.1 Timing Adjustable                                    | A      | N.v.t.    | Geen tijdslimieten.                                                                                                                                  |
+| 2.2.2 Pause, Stop, Hide                                    | A      | N.v.t.    | Geen bewegende of automatisch verversende inhoud.                                                                                                    |
+| 2.3.1 Three Flashes or Below Threshold                     | A      | Voldoet   | Niets flitst.                                                                                                                                        |
+| 2.4.1 Bypass Blocks                                        | A      | N.v.t.    | Eén pagina, dus geen herhaalde blokken; landmarks zijn er wel.                                                                                       |
+| 2.4.2 Page Titled                                          | A      | Voldoet   | Titel "Adreszoeker – zoek een adres in Nederland".                                                                                                   |
+| 2.4.3 Focus Order                                          | A      | Voldoet   | Tab gaat van het zoekveld naar de link in de footer; de focus blijft in het veld bij het kiezen.                                                     |
+| 2.4.4 Link Purpose (In Context)                            | A      | Voldoet   | De enige link heet "Broncode op GitHub".                                                                                                             |
+| 2.4.5 Multiple Ways                                        | AA     | N.v.t.    | Eén pagina, geen set van pagina's.                                                                                                                   |
+| 2.4.6 Headings and Labels                                  | AA     | Voldoet   | Kop "Adreszoeker" en label "Adres" beschrijven het doel.                                                                                             |
+| 2.4.7 Focus Visible                                        | AA     | Voldoet   | Duidelijke focusring van 3 pixels op het zoekveld en de link, licht en donker.                                                                       |
+| 2.5.1 Pointer Gestures                                     | A      | N.v.t.    | Geen veeg- of meervingergebaren.                                                                                                                     |
+| 2.5.2 Pointer Cancellation                                 | A      | Voldoet   | Een suggestie wordt gekozen bij het loslaten van de muisknop.                                                                                        |
+| 2.5.3 Label in Name                                        | A      | Voldoet   | De toegankelijke namen zijn gelijk aan de zichtbare tekst.                                                                                           |
+| 2.5.4 Motion Actuation                                     | A      | N.v.t.    | Geen bediening door het apparaat te bewegen.                                                                                                         |
+| 3.1.1 Language of Page                                     | A      | Voldoet   | `lang="nl"`.                                                                                                                                         |
+| 3.1.2 Language of Parts                                    | AA     | Voldoet   | Het enige Engelse woord is de eigennaam GitHub; eigennamen zijn uitgezonderd.                                                                        |
+| 3.2.1 On Focus                                             | A      | Voldoet   | Focus verandert niets aan de pagina.                                                                                                                 |
+| 3.2.2 On Input                                             | A      | Voldoet   | Typen toont suggesties en kiezen toont de details eronder; de focus blijft in het zoekveld.                                                          |
+| 3.2.3 Consistent Navigation                                | AA     | N.v.t.    | Eén pagina.                                                                                                                                          |
+| 3.2.4 Consistent Identification                            | AA     | N.v.t.    | Eén pagina.                                                                                                                                          |
+| 3.3.1 Error Identification                                 | A      | Voldoet   | Fouten bij zoeken en ophalen staan als tekst in een statusmelding.                                                                                   |
+| 3.3.2 Labels or Instructions                               | A      | Voldoet   | Label "Adres" met een voorbeeld.                                                                                                                     |
+| 3.3.3 Error Suggestion                                     | AA     | Voldoet   | Foutmeldingen zeggen wat je kunt doen: "Probeer het opnieuw."                                                                                        |
+| 3.3.4 Error Prevention (Legal, Financial, Data)            | AA     | N.v.t.    | Geen juridische of financiële handelingen; er wordt niets opgeslagen.                                                                                |
+| 4.1.1 Parsing                                              | A      | Voldoet   | Geldt voor HTML altijd als voldaan (WCAG 2.1, noot bij 4.1.1).                                                                                       |
+| 4.1.2 Name, Role, Value                                    | A      | Voldoet   | Zoekveld, lijst en suggesties hebben naam, rol en status (`aria-expanded`, `aria-activedescendant`, `aria-selected`); bevestigd met VoiceOver.       |
+| 4.1.3 Status Messages                                      | AA     | Voldoet   | Aantal resultaten, zoeken, fouten en wissen staan in een statusmelding (zie hierboven over VoiceOver).                                               |
 
 ## Technische keuzes
 
