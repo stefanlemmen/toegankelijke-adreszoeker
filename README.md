@@ -163,6 +163,7 @@ Als er resultaten zijn, zegt VoiceOver "expanded, list 10 items" en slaat het de
 - **Tests via de DOM**, zoals een gebruiker de app ziet (Vitest, axe-core); alleen de netwerkverzoeken worden gesimuleerd, met echte, ingekorte PDOK-antwoorden.
 - **Kaart zonder kaartbibliotheek:** statische tegels van de PDOK BRT Achtergrondkaart als raster van `<img>`; de app berekent uit de coördinaten welke tegels nodig zijn, en CSS zet het adres precies in het midden. Geen nieuwe dependency.
 - **CSS** zonder framework: kleuren als custom properties met `light-dark()`, zodat de app de lichte of donkere weergave van het systeem volgt.
+- **Open Sans, zelf gehost:** twee woff2-bestanden (Latijns en uitgebreid Latijns, variabel gewicht) in de repository, zodat de browser van een bezoeker geen fontserver van derden aanroept. Het uitgebreide bestand laadt alleen als een adres zo'n teken bevat.
 - **GitHub Actions** draait bij elke pull request en push naar `main` format, typecheck, lint, tests en build, en publiceert `main` daarna op GitHub Pages.
 
 ## Lokaal starten
@@ -185,4 +186,5 @@ Ik heb dit project gebouwd met Claude Code als pair programmer. De componenten h
 
 - Adresgegevens: BAG via [PDOK Locatieserver](https://www.pdok.nl/), CC0 1.0.
 - Kaart: BRT Achtergrondkaart van het Kadaster via [PDOK](https://www.pdok.nl/), [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.nl).
+- Lettertype: [Open Sans](https://github.com/googlefonts/opensans), SIL Open Font License 1.1, zie [src/fonts/OFL.txt](src/fonts/OFL.txt).
 - Code: MIT, zie [LICENSE](LICENSE).
