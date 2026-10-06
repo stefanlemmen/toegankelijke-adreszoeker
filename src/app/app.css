@@ -44,6 +44,8 @@ footer {
 
 footer p {
   margin: 0;
+  /* "anywhere" also lowers the minimum width, so a long word breaks instead of widening the footer at 320px with large text and text spacing (WCAG 1.4.10, 1.4.12). */
+  overflow-wrap: anywhere;
 }
 
 /* Wide screen: source link centred, credit on the right; equal outer columns keep the centre true. */
