@@ -65,7 +65,7 @@ export class AddressSearch {
   });
   protected readonly options = computed(() => (this.closed() ? [] : this.results()));
   protected readonly activeIndex = linkedSignal({
-    source: this.options,
+    source: () => [this.options(), this.searchForm.query().controlValue()],
     computation: (): number | undefined => undefined,
   });
 
