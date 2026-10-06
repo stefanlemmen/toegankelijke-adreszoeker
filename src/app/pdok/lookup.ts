@@ -16,7 +16,7 @@ const lookupResponse = z.object({
   response: z.object({ docs: z.tuple([address]) }),
 });
 
-type Address = z.infer<typeof address>;
+export type Address = z.infer<typeof address>;
 
 /** No request until an address is chosen. */
 export function lookupRequest(id: string | undefined): HttpResourceRequest | undefined {

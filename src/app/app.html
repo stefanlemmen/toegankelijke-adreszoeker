@@ -2,8 +2,8 @@
   <h1>Adreszoeker</h1>
   <app-address-search (selected)="selectedId.set($event)" />
 
-  @if (selectedId(); as id) {
-    <app-address-details [id]="id" />
+  @if (selectedId()) {
+    <app-address-details [address]="address()" [failed]="lookupFailed()" />
   }
 </main>
 <footer>
