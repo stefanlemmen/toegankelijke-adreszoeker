@@ -441,7 +441,7 @@ describe('App', () => {
     expect(imageNames(page)).toEqual(['Kaart van Nederland']);
   });
 
-  it('shows the map tiles of the chosen address, grey in dark mode', async () => {
+  it('shows the map tiles of the chosen address', async () => {
     (await searchFor(page, 'damrak')).flush(SUGGEST_DAMRAK);
     await advance();
 
@@ -450,12 +450,8 @@ describe('App', () => {
     http.expectOne(isLookupRequestFor('adr-damrak-18-1')).flush(LOOKUP_DAMRAK_18_1);
     await advance();
 
-    const lightTiles = [...page.querySelectorAll('img')].map((img) => img.src);
-    const darkTiles = [
-      ...page.querySelectorAll('source[media="(prefers-color-scheme: dark)"]'),
-    ].map((source) => source.getAttribute('srcset'));
-    expect(lightTiles).toContain(`${TILES_URL}/standaard/${DAMRAK_TILE}`);
-    expect(darkTiles).toContain(`${TILES_URL}/grijs/${DAMRAK_TILE}`);
+    const tiles = [...page.querySelectorAll('img')].map((img) => img.src);
+    expect(tiles).toContain(`${TILES_URL}/standaard/${DAMRAK_TILE}`);
   });
 
   it('announces that it is searching until the results arrive', async () => {

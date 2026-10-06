@@ -21,18 +21,13 @@
   left: 50%;
   display: grid;
   grid-template-columns: repeat(var(--columns), var(--tile-size));
-  /* Rows keep their height when failed tiles are hidden, so the address stays in the middle. */
-  grid-auto-rows: var(--tile-size);
 }
 
-/* An inline image leaves a gap for descenders below each tile. */
-img {
-  display: block;
-}
-
-/* A failed tile; the rule above would otherwise override `hidden`. */
-img[hidden] {
-  display: none;
+/* Dark mode: PDOK has no dark map (`grijs` is light), so dim the standard one; the marker stays outside the filter. */
+@media (prefers-color-scheme: dark) {
+  [role='img'] {
+    filter: brightness(0.6);
+  }
 }
 
 /* The pin's tip on the address. */
