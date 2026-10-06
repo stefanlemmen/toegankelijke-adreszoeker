@@ -43,7 +43,7 @@ Een screenreader ziet geen kleuren of posities, alleen wat de HTML erover vertel
 
 **Waarom de focus in het veld blijft:** zo kun je gewoon doortypen of je zoekvraag verbeteren terwijl je door de suggesties loopt. De suggesties zelf zijn daarom niet met Tab bereikbaar; dat is bewust en volgens het patroon.
 
-Daarnaast heeft de pagina twee landmarks, `<main>` en `<search>`, zodat je met de rotor van VoiceOver (of de landmarknavigatie van andere screenreaders) direct naar het zoekformulier springt.
+Daarnaast heeft de pagina drie landmarks, `<main>`, `<search>` en de `<footer>`, zodat je met de rotor van VoiceOver (of de landmarknavigatie van andere screenreaders) direct naar het zoekformulier of de link naar de broncode springt.
 
 Bron: [WAI-ARIA Authoring Practices, Combobox Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/).
 
@@ -62,7 +62,7 @@ Zo klinkt de adreszoeker met VoiceOver in Safari op macOS (oktober 2026). VoiceO
 | Opnieuw `damrak` typen, dan Escape | "collapsed, damrak"                                                                     |
 | Nog een keer Escape                | "Zoekveld gewist"                                                                       |
 | `xqzvw` typen (bestaat niet)       | "Geen adressen gevonden"                                                                |
-| Rotor (VO+U), Landmarks            | `main` en `search`                                                                      |
+| Rotor (VO+U), Landmarks            | `main`, `search` en `content information`                                               |
 
 De gekozen details lees je daarna met VO+→ als "description list 5 items", gevolgd door elk label en elke waarde.
 
