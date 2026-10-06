@@ -203,6 +203,18 @@ describe('App', () => {
     expect(combobox.getAttribute('aria-expanded')).toBe('false');
   });
 
+  it('keeps the field cleared when Escape is pressed before the debounce has passed', async () => {
+    const combobox = inputLabelled(page, 'Adres');
+    typeInto(combobox, 'damrak');
+    await advance();
+
+    pressKey(combobox, 'Escape');
+    await advance(DEBOUNCE_MS);
+
+    expect(combobox.value).toBe('');
+    http.expectNone(isSuggestRequestFor('damrak'));
+  });
+
   // jsdom doesn't move focus on a mouse press, so check that the press can't take it away.
   it('keeps focus in the search field when an option is pressed', async () => {
     (await searchFor(page, 'damrak')).flush(SUGGEST_DAMRAK);
