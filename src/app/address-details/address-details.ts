@@ -8,6 +8,7 @@ const LOOKUP_ERROR = 'De details van dit adres konden niet worden opgehaald. Pro
 @Component({
   selector: 'app-address-details',
   templateUrl: './address-details.html',
+  styleUrl: './address-details.css',
 })
 export class AddressDetails {
   /** The PDOK id of the address to show. */

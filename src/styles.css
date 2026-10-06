@@ -1,0 +1,33 @@
+:root {
+  color-scheme: light dark;
+  /* Contrast checked against --color-background (WCAG 1.4.3, 1.4.11): text 15:1+, muted 7:1+, border and accent 5:1+. */
+  --color-background: light-dark(#ffffff, #141414);
+  --color-text: light-dark(#1a1a1a, #ededed);
+  --color-text-muted: light-dark(#545454, #b3b3b3);
+  --color-border: light-dark(#6e6e6e, #8c8c8c);
+  --color-accent: light-dark(#1849a9, #8cb4ff);
+  --color-active: light-dark(#e5ecf8, #1f2b40);
+  --color-hover: light-dark(#f2f2f2, #262626);
+  --space: 1rem;
+
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+  overflow-wrap: break-word;
+  background: var(--color-background);
+  color: var(--color-text);
+}
+
+body {
+  margin: 0;
+}
+
+main {
+  max-width: 40rem;
+  margin-inline: auto;
+  padding: var(--space);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+}
