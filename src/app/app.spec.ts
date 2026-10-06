@@ -12,6 +12,7 @@ import {
   definitionOf,
   descriptionOf,
   elementWithText,
+  headings,
   imageNames,
   inputLabelled,
   optionsOf,
@@ -434,6 +435,22 @@ describe('App', () => {
     await advance();
 
     expect(imageNames(page)).toEqual(['Kaart met de ligging van Damrak 18-1, Amsterdam']);
+    expect(await axeViolations(page)).toEqual([]);
+  });
+
+  it('heads the details of the chosen address, below the page heading', async () => {
+    expect(headings(page)).toEqual(['Adreszoeker']);
+
+    (await searchFor(page, 'damrak')).flush(SUGGEST_DAMRAK);
+    await advance();
+
+    elementWithText(page, 'Damrak 18-1, Amsterdam').click();
+    await advance();
+    http.expectOne(isLookupRequestFor('adr-damrak-18-1')).flush(LOOKUP_DAMRAK_18_1);
+    await advance();
+
+    expect(headings(page)).toEqual(['Adreszoeker', 'Gekozen adres']);
+    expect(page.querySelector('h2')?.textContent?.trim()).toBe('Gekozen adres');
     expect(await axeViolations(page)).toEqual([]);
   });
 
