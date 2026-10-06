@@ -22,8 +22,10 @@ main {
     padding: 0;
   }
 
+  /* Same colour as the footer: together they frame the map. */
   main > div {
     padding: var(--space);
+    background: var(--color-hover);
   }
 }
 
