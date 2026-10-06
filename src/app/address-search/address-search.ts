@@ -6,6 +6,7 @@ import { parseSuggestions, suggestRequest } from '@app/pdok/suggest';
 const SEARCH_DEBOUNCE_MS = 300;
 const MIN_QUERY_LENGTH = 2;
 const SEARCH_ERROR = 'Er ging iets mis bij het zoeken. Probeer het opnieuw.';
+const SEARCHING = 'Zoeken…';
 
 function foundMessage(count: number): string {
   if (count === 0) {
@@ -69,6 +70,8 @@ export class AddressSearch {
         return SEARCH_ERROR;
       case 'resolved':
         return foundMessage(this.results().length);
+      case 'loading':
+        return SEARCHING;
       default:
         return '';
     }

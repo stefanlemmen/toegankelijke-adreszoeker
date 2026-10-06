@@ -282,6 +282,18 @@ describe('App', () => {
     expect(definitionOf(page, 'Gemeente')).toBe('Amsterdam');
   });
 
+  it('announces that it is searching until the results arrive', async () => {
+    const request = await searchFor(page, 'damrak');
+    await advance();
+
+    expect(statusMessages(page)).toEqual(['Zoeken…']);
+
+    request.flush(SUGGEST_DAMRAK);
+    await advance();
+
+    expect(statusMessages(page)).toEqual(['3 adressen gevonden']);
+  });
+
   it('announces an error message when searching fails', async () => {
     (await searchFor(page, 'damrak')).flush(null, {
       status: 500,
