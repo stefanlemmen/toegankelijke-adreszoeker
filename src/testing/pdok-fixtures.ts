@@ -28,10 +28,12 @@ export const LOOKUP_DAMRAK_18_1 = {
   response: {
     docs: [
       {
+        weergavenaam: 'Damrak 18-1, Amsterdam',
         straatnaam: 'Damrak',
         huis_nlt: '18-1',
         woonplaatsnaam: 'Amsterdam',
         gemeentenaam: 'Amsterdam',
+        centroide_ll: 'POINT(4.89727884 52.37658789)',
       },
     ],
   },

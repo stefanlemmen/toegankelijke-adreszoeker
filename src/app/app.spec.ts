@@ -12,6 +12,7 @@ import {
   definitionOf,
   descriptionOf,
   elementWithText,
+  imageNames,
   inputLabelled,
   optionsOf,
   pressKey,
@@ -397,6 +398,19 @@ describe('App', () => {
     expect(definitionOf(page, 'Postcode')).toBe('Onbekend');
     expect(definitionOf(page, 'Woonplaats')).toBe('Amsterdam');
     expect(definitionOf(page, 'Gemeente')).toBe('Amsterdam');
+    expect(await axeViolations(page)).toEqual([]);
+  });
+
+  it('shows a map of the chosen address, named after it', async () => {
+    (await searchFor(page, 'damrak')).flush(SUGGEST_DAMRAK);
+    await advance();
+
+    elementWithText(page, 'Damrak 18-1, Amsterdam').click();
+    await advance();
+    http.expectOne(isLookupRequestFor('adr-damrak-18-1')).flush(LOOKUP_DAMRAK_18_1);
+    await advance();
+
+    expect(imageNames(page)).toContain('Kaart met de ligging van Damrak 18-1, Amsterdam');
     expect(await axeViolations(page)).toEqual([]);
   });
 
