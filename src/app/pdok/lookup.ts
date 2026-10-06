@@ -4,6 +4,7 @@ import * as z from 'zod/mini';
 const LOOKUP_URL = 'https://api.pdok.nl/bzk/locatieserver/search/v3_1/lookup';
 
 const address = z.object({
+  weergavenaam: z.string(),
   straatnaam: z.string(),
   huis_nlt: z.string(),
   postcode: z.optional(z.string()),

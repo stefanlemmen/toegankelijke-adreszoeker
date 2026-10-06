@@ -2,13 +2,14 @@ import { httpResource } from '@angular/common/http';
 import { Component, computed, signal } from '@angular/core';
 import { lookupRequest, parseAddress } from '@app/pdok/lookup';
 import { AddressDetails } from './address-details/address-details';
+import { AddressMap } from './address-map/address-map';
 import { AddressSearch } from './address-search/address-search';
 
 export const REPO_URL = 'https://github.com/stefanlemmen/toegankelijke-adreszoeker';
 
 @Component({
   selector: 'app-root',
-  imports: [AddressDetails, AddressSearch],
+  imports: [AddressDetails, AddressMap, AddressSearch],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })

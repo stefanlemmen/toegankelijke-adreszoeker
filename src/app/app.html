@@ -5,6 +5,7 @@
   @if (selectedId()) {
     <app-address-details [address]="address()" [failed]="lookupFailed()" />
   }
+  <app-address-map [address]="address()" />
 </main>
 <footer>
   <a [href]="repoUrl">
