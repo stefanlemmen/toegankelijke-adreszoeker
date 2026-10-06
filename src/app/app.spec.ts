@@ -40,10 +40,10 @@ describe('App', () => {
     http = TestBed.inject(HttpTestingController);
     page = TestBed.createComponent(App).nativeElement;
     await advance();
+    onTestFinished(() => http.verify());
   });
 
   afterEach(() => {
-    http.verify();
     vi.useRealTimers();
   });
 
