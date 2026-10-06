@@ -5,6 +5,7 @@ import {
   TestRequest,
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { axeViolations } from '@testing/axe';
 import {
   activeOptionOf,
   advance,
@@ -99,6 +100,7 @@ describe('App', () => {
     pressKey(combobox, 'ArrowUp');
     await advance();
     expect(activeOptionOf(page, combobox)).toBe('Damrak 1, 1012LG Amsterdam');
+    expect(await axeViolations(page)).toEqual([]);
   });
 
   it.each([
@@ -255,6 +257,10 @@ describe('App', () => {
     expect(statusMessages(page)).toEqual(['']);
   });
 
+  it('has no axe violations before searching', async () => {
+    expect(await axeViolations(page)).toEqual([]);
+  });
+
   it.each([
     { query: 'damrak', response: SUGGEST_DAMRAK, message: '3 adressen gevonden' },
     { query: 'damrak 201 amsterdam', response: SUGGEST_DAMRAK_201, message: '1 adres gevonden' },
@@ -280,6 +286,7 @@ describe('App', () => {
     expect(definitionOf(page, 'Postcode')).toBe('Onbekend');
     expect(definitionOf(page, 'Woonplaats')).toBe('Amsterdam');
     expect(definitionOf(page, 'Gemeente')).toBe('Amsterdam');
+    expect(await axeViolations(page)).toEqual([]);
   });
 
   it('announces that it is searching until the results arrive', async () => {
@@ -287,6 +294,7 @@ describe('App', () => {
     await advance();
 
     expect(statusMessages(page)).toEqual(['Zoeken…']);
+    expect(await axeViolations(page)).toEqual([]);
 
     request.flush(SUGGEST_DAMRAK);
     await advance();
@@ -302,6 +310,7 @@ describe('App', () => {
     await advance();
 
     expect(statusMessages(page)).toEqual(['Er ging iets mis bij het zoeken. Probeer het opnieuw.']);
+    expect(await axeViolations(page)).toEqual([]);
   });
 
   it('announces an error message when the address details are not found', async () => {
@@ -317,5 +326,6 @@ describe('App', () => {
       '',
       'De details van dit adres konden niet worden opgehaald. Probeer het opnieuw.',
     ]);
+    expect(await axeViolations(page)).toEqual([]);
   });
 });
