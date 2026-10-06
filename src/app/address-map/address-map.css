@@ -1,0 +1,16 @@
+/* Until slice 5 the map sits in the page; the grid is wider than the screen. */
+:host {
+  display: block;
+  overflow: hidden;
+}
+
+[role='img'] {
+  display: grid;
+  grid-template-columns: repeat(var(--columns), 256px);
+  inline-size: max-content;
+}
+
+/* An inline image leaves a gap for descenders below each tile. */
+img {
+  display: block;
+}

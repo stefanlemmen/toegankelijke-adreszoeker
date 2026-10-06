@@ -1,3 +1,15 @@
-@if (address(); as address) {
-  <div role="img" [attr.aria-label]="'Kaart met de ligging van ' + address.weergavenaam"></div>
-}
+@let chosen = address();
+<div
+  role="img"
+  [style.--columns]="columns"
+  [attr.aria-label]="
+    chosen ? 'Kaart met de ligging van ' + chosen.weergavenaam : 'Kaart van Nederland'
+  "
+>
+  @for (tile of tiles(); track tile.light) {
+    <picture>
+      <source media="(prefers-color-scheme: dark)" [srcset]="tile.dark" />
+      <img [src]="tile.light" alt="" width="256" height="256" />
+    </picture>
+  }
+</div>
