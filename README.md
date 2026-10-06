@@ -75,7 +75,7 @@ Zo klinkt de adreszoeker met VoiceOver in Safari op macOS (oktober 2026). VoiceO
 | `xqzvw` typen (bestaat niet)       | "Geen adressen gevonden"                                                                                  |
 | Rotor (VO+U), Landmarks            | `main`, `search` en `content information`                                                                 |
 
-De gekozen details lees je daarna met VO+→ als "description list 5 items", gevolgd door elk label en elke waarde.
+Na het kiezen lees je met VO+→ eerst de kop ("heading level 2, Gekozen adres") en daarna de details als "description list 5 items", gevolgd door elk label en elke waarde.
 
 Als er resultaten zijn, zegt VoiceOver "expanded, list 10 items" en slaat het de statusmelding "10 adressen gevonden" over; het aantal hoor je dus via de lijst. Zonder lijst, zoals bij "Geen adressen gevonden" of "Zoekveld gewist", leest VoiceOver de statusmelding wel voor.
 
@@ -86,7 +86,7 @@ Als er resultaten zijn, zegt VoiceOver "expanded, list 10 items" en slaat het de
 **Testmethode:**
 
 - Geautomatiseerd: elke componenttest controleert de pagina met axe-core 4.13.0, in elke toestand (leeg, zoeken, resultaten, lijst open, details, foutmeldingen).
-- Lighthouse 13.5.0 op de live site: toegankelijkheidsscore 100, in de lichte én de donkere weergave (begintoestand van de pagina).
+- Lighthouse 13.5.0 op de live site: toegankelijkheidsscore 100, in de lichte én de donkere weergave (begintoestand van de pagina). Na het toevoegen van de kaart lokaal opnieuw gedraaid met Lighthouse 13.5.0: weer 100 in licht en donker, op mobiel en desktop.
 - Contrast handmatig gemeten in licht en donker, ook op de grijze achtergrond van het paneel: tekst minstens 12:1, hint en status minstens 6,8:1, randen minstens 4,5:1, focusring minstens 7,3:1.
 - Weergave op 320 pixels breed (WCAG 1.4.10), met vergrote tekstafstand (1.4.12) en met 200% tekstgrootte (1.4.4): geen horizontaal scrollen en geen verlies van inhoud.
 - Handmatig: toetsenbord en focusvolgorde in Chrome en Safari; de hele zoekflow met VoiceOver in Safari (zie hierboven).
