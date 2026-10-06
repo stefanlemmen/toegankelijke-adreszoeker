@@ -78,6 +78,24 @@ describe('App', () => {
     expect(descriptionOf(page, combobox)).toBe('Bijvoorbeeld: Damrak 1 Amsterdam');
   });
 
+  it('links to the source code in the page footer, in the same tab', () => {
+    const link = elementWithText(page, 'Broncode op GitHub');
+    if (!(link instanceof HTMLAnchorElement)) {
+      throw new Error('"Broncode op GitHub" is not a link');
+    }
+    expect(link.getAttribute('href')).toBe(
+      'https://github.com/stefanlemmen/toegankelijke-adreszoeker',
+    );
+    expect(link.hasAttribute('target')).toBe(false);
+    // The icon is decorative: the link text already names the link.
+    expect(link.querySelector('svg')?.getAttribute('aria-hidden')).toBe('true');
+
+    // A footer is only a contentinfo landmark outside these elements (APG Landmark Regions).
+    const footer = link.closest('footer');
+    expect(footer).not.toBeNull();
+    expect(footer?.closest('main, article, aside, nav, section')).toBeNull();
+  });
+
   it('moves the active option with the arrow keys, wrapping at both ends', async () => {
     const combobox = inputLabelled(page, 'Adres');
     (await searchFor(page, 'damrak')).flush(SUGGEST_DAMRAK);
