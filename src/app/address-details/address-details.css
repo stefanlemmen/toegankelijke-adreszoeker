@@ -2,6 +2,12 @@
   margin-block: 0.5rem;
 }
 
+/* Smaller than the browser's 1.5em: a section heading in a narrow panel. */
+h2 {
+  margin-block: var(--space) 0.5rem;
+  font-size: 1.25rem;
+}
+
 dl {
   display: grid;
   grid-template-columns: max-content 1fr;
