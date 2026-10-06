@@ -7,6 +7,7 @@ const SEARCH_DEBOUNCE_MS = 300;
 const MIN_QUERY_LENGTH = 2;
 const SEARCH_ERROR = 'Er ging iets mis bij het zoeken. Probeer het opnieuw.';
 const SEARCHING = 'Zoeken…';
+const CLEARED = 'Zoekveld gewist';
 
 function foundMessage(count: number): string {
   if (count === 0) {
@@ -52,6 +53,10 @@ export class AddressSearch {
     this.suggestions.hasValue() ? this.suggestions.value() : [],
   );
   private readonly closed = linkedSignal({ source: this.results, computation: () => false });
+  private readonly cleared = linkedSignal({
+    source: () => this.searchForm.query().controlValue(),
+    computation: () => false,
+  });
   protected readonly options = computed(() => (this.closed() ? [] : this.results()));
   protected readonly activeIndex = linkedSignal({
     source: this.options,
@@ -65,6 +70,9 @@ export class AddressSearch {
   protected readonly expanded = computed(() => this.options().length > 0);
   // Counts the results, not the options: closing the list with Escape keeps the results.
   protected readonly statusMessage = computed(() => {
+    if (this.cleared()) {
+      return CLEARED;
+    }
     switch (this.suggestions.status()) {
       case 'error':
         return SEARCH_ERROR;
@@ -122,7 +130,16 @@ export class AddressSearch {
     if (this.expanded()) {
       this.closed.set(true);
     } else {
-      this.searchForm.query().reset('');
+      this.clear();
+    }
+  }
+
+  private clear(): void {
+    const query = this.searchForm.query();
+    // controlValue: within the debounce, value doesn't have the typed text yet.
+    if (query.controlValue()) {
+      query.reset('');
+      this.cleared.set(true);
     }
   }
 }
