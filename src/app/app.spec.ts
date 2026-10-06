@@ -157,6 +157,23 @@ describe('App', () => {
     expect(activeOptionOf(page, combobox)).toBeUndefined();
   });
 
+  it.each(['shiftKey', 'ctrlKey', 'metaKey'] as const)(
+    'leaves keys pressed with %s to the browser for editing text',
+    async (modifier) => {
+      const combobox = inputLabelled(page, 'Adres');
+      (await searchFor(page, 'damrak')).flush(SUGGEST_DAMRAK);
+      await advance();
+
+      const down = pressKey(combobox, 'ArrowDown', { [modifier]: true });
+      const enter = pressKey(combobox, 'Enter', { [modifier]: true });
+      await advance();
+
+      expect(down.defaultPrevented).toBe(false);
+      expect(enter.defaultPrevented).toBe(false);
+      expect(activeOptionOf(page, combobox)).toBeUndefined();
+    },
+  );
+
   it('clears the field with a second Escape', async () => {
     const combobox = inputLabelled(page, 'Adres');
     (await searchFor(page, 'damrak')).flush(SUGGEST_DAMRAK);

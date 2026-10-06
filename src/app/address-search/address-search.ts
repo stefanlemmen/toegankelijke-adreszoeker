@@ -73,6 +73,10 @@ export class AddressSearch {
   };
 
   protected onKeydown(event: KeyboardEvent): void {
+    if (event.shiftKey || event.ctrlKey || event.metaKey) {
+      return;
+    }
+
     const action = this.keyActions[event.altKey ? `Alt+${event.key}` : event.key];
     if (action) {
       event.preventDefault();

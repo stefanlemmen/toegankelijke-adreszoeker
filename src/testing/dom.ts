@@ -60,10 +60,15 @@ export function pressKey(
   element: HTMLElement,
   key: string,
   modifiers: KeyboardEventInit = {},
-): void {
-  element.dispatchEvent(
-    new KeyboardEvent('keydown', { ...modifiers, key, bubbles: true, cancelable: true }),
-  );
+): KeyboardEvent {
+  const event = new KeyboardEvent('keydown', {
+    ...modifiers,
+    key,
+    bubbles: true,
+    cancelable: true,
+  });
+  element.dispatchEvent(event);
+  return event;
 }
 
 /** The text of the option `aria-activedescendant` points to, checked to be the only selected one. */
