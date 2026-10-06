@@ -29,21 +29,21 @@ Shift-, Ctrl- en Cmd-combinaties worden door de browser afgehandeld, zodat tekst
 
 ### Hoe de combobox werkt
 
-Een schermlezer ziet geen kleuren of posities, alleen wat de HTML erover vertelt. Waar HTML zelf geen element heeft voor "zoekveld met suggestielijst", vullen ARIA-attributen dat aan. Deze attributen gebruikt de adreszoeker, en hierom:
+Een screenreader ziet geen kleuren of posities, alleen wat de HTML erover vertelt. Waar HTML zelf geen element heeft voor "zoekveld met suggestielijst", vullen ARIA-attributen dat aan. Deze attributen gebruikt de adreszoeker, en hierom:
 
 - **`role="combobox"`** op het zoekveld: het is niet zomaar een tekstveld, maar een veld met een lijst keuzes eronder.
 - **`aria-autocomplete="list"`**: de app vult niets zelf in het veld in, maar toont een lijst waaruit je kiest.
 - **`aria-controls`**: verwijst naar de lijst die bij dit veld hoort.
 - **`aria-expanded`**: geeft aan of die lijst nu open (`true`) of dicht (`false`) is.
-- **`aria-activedescendant`**: verwijst naar de suggestie die je met de pijltjestoetsen hebt gemarkeerd. Zo leest de schermlezer die suggestie voor, terwijl de focus in het veld blijft.
+- **`aria-activedescendant`**: verwijst naar de suggestie die je met de pijltjestoetsen hebt gemarkeerd. Zo leest de screenreader die suggestie voor, terwijl de focus in het veld blijft.
 - **`role="listbox"`** en **`role="option"`**: de lijst en de suggesties erin.
 - **`aria-selected="true"`**: markeert de actieve suggestie. Visueel krijgt die ook een rand, dus niet alleen een andere kleur.
-- **`aria-describedby`**: koppelt de hint "Bijvoorbeeld: Damrak 1 Amsterdam" aan het veld, zodat de schermlezer die voorleest zodra het veld de focus krijgt.
-- **`role="status"`**: een vaste regel onder het veld voor meldingen ("Zoeken…", "3 adressen gevonden", "Geen adressen gevonden", foutmeldingen). De schermlezer leest die voor zonder dat de focus verspringt. De regel staat er altijd, ook leeg, omdat schermlezers een melding kunnen missen als de regel tegelijk met de tekst verschijnt.
+- **`aria-describedby`**: koppelt de hint "Bijvoorbeeld: Damrak 1 Amsterdam" aan het veld, zodat de screenreader die voorleest zodra het veld de focus krijgt.
+- **`role="status"`**: een vaste regel onder het veld voor meldingen ("Zoeken…", "3 adressen gevonden", "Geen adressen gevonden", foutmeldingen). De screenreader leest die voor zonder dat de focus verspringt. De regel staat er altijd, ook leeg, omdat screenreaders een melding kunnen missen als de regel tegelijk met de tekst verschijnt.
 
 **Waarom de focus in het veld blijft:** zo kun je gewoon doortypen of je zoekvraag verbeteren terwijl je door de suggesties loopt. De suggesties zelf zijn daarom niet met Tab bereikbaar; dat is bewust en volgens het patroon.
 
-Daarnaast heeft de pagina twee landmarks, `<main>` en `<search>`, zodat je met de rotor van VoiceOver (of de landmarknavigatie van andere schermlezers) direct naar het zoekformulier springt.
+Daarnaast heeft de pagina twee landmarks, `<main>` en `<search>`, zodat je met de rotor van VoiceOver (of de landmarknavigatie van andere screenreaders) direct naar het zoekformulier springt.
 
 Bron: [WAI-ARIA Authoring Practices, Combobox Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/).
 
@@ -61,7 +61,7 @@ Bron: [WAI-ARIA Authoring Practices, Combobox Pattern](https://www.w3.org/WAI/AR
 
 **Bekende beperkingen:**
 
-- Alleen getest met VoiceOver op macOS; niet met NVDA, JAWS of schermlezers op mobiel.
+- Alleen getest met VoiceOver op macOS; niet met NVDA, JAWS of screenreaders op mobiel.
 - 200% browserzoom is nagebootst met een smaller venster en 200% tekst, niet apart met de zoomfunctie van de browser getest.
 - Er is geen aparte wisknop; Escape (twee keer) wist het veld.
 - De adresgegevens en de tekst van de suggesties komen van PDOK; daar heeft deze app geen invloed op.
