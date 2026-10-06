@@ -9,6 +9,20 @@ export const SUGGEST_DAMRAK = {
   },
 };
 
+/** `suggest?q=damrak 201 amsterdam&fq=type:adres`: a single match. */
+export const SUGGEST_DAMRAK_201 = {
+  response: {
+    docs: [{ id: 'adr-damrak-201', weergavenaam: 'Damrak 201, Amsterdam' }],
+  },
+};
+
+/** `suggest?q=xqzvw&fq=type:adres`: no matches. */
+export const SUGGEST_NONE = {
+  response: {
+    docs: [],
+  },
+};
+
 /** `lookup?id=adr-damrak-18-1`: an address without a postcode. */
 export const LOOKUP_DAMRAK_18_1 = {
   response: {

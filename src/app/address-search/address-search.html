@@ -32,7 +32,6 @@
       </li>
     }
   </ul>
-  @if (suggestions.error()) {
-    <p>{{ searchError }}</p>
-  }
+  <!-- Always rendered: screen readers can miss a live region added together with its text. -->
+  <p role="status">{{ statusMessage() }}</p>
 </search>

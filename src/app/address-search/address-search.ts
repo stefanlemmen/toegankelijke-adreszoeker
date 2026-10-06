@@ -7,6 +7,13 @@ const SEARCH_DEBOUNCE_MS = 300;
 const MIN_QUERY_LENGTH = 2;
 const SEARCH_ERROR = 'Er ging iets mis bij het zoeken. Probeer het opnieuw.';
 
+function foundMessage(count: number): string {
+  if (count === 0) {
+    return 'Geen adressen gevonden';
+  }
+  return count === 1 ? '1 adres gevonden' : `${count} adressen gevonden`;
+}
+
 function nextIndex(index: number | undefined, count: number): number {
   return index === undefined ? 0 : (index + 1) % count;
 }
@@ -26,7 +33,6 @@ export class AddressSearch {
   readonly selected = output<string>();
 
   private readonly search = signal({ query: '' });
-  protected readonly searchError = SEARCH_ERROR;
   protected readonly searchForm = form(this.search, (path) => {
     debounce(path.query, SEARCH_DEBOUNCE_MS);
     minLength(path.query, MIN_QUERY_LENGTH);
@@ -56,6 +62,17 @@ export class AddressSearch {
     return index === undefined ? null : `address-option-${index}`;
   });
   protected readonly expanded = computed(() => this.options().length > 0);
+  // Counts the results, not the options: closing the list with Escape keeps the results.
+  protected readonly statusMessage = computed(() => {
+    switch (this.suggestions.status()) {
+      case 'error':
+        return SEARCH_ERROR;
+      case 'resolved':
+        return foundMessage(this.results().length);
+      default:
+        return '';
+    }
+  });
 
   protected choose(index: number): void {
     const suggestion = this.options()[index];

@@ -75,6 +75,13 @@ export function descriptionOf(root: HTMLElement, element: HTMLElement): string {
     .join(' ');
 }
 
+/** The text of every `role="status"` live region, in document order; empty ones included. */
+export function statusMessages(root: HTMLElement): string[] {
+  return [...root.querySelectorAll('[role="status"]')].map(
+    (status) => status.textContent?.trim() ?? '',
+  );
+}
+
 export function pressKey(
   element: HTMLElement,
   key: string,

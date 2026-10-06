@@ -1,6 +1,10 @@
-@if (address.error()) {
-  <p>{{ lookupError }}</p>
-} @else if (address.hasValue()) {
+<!-- Always rendered: screen readers can miss a live region added together with its text. -->
+<p role="status">
+  @if (address.error()) {
+    {{ lookupError }}
+  }
+</p>
+@if (address.hasValue()) {
   <dl>
     <dt>Straat</dt>
     <dd>{{ address.value().straatnaam }}</dd>

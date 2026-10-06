@@ -14,9 +14,16 @@ import {
   inputLabelled,
   optionsOf,
   pressKey,
+  statusMessages,
   typeInto,
 } from '@testing/dom';
-import { LOOKUP_DAMRAK_18_1, LOOKUP_NOT_FOUND, SUGGEST_DAMRAK } from '@testing/pdok-fixtures';
+import {
+  LOOKUP_DAMRAK_18_1,
+  LOOKUP_NOT_FOUND,
+  SUGGEST_DAMRAK,
+  SUGGEST_DAMRAK_201,
+  SUGGEST_NONE,
+} from '@testing/pdok-fixtures';
 import { isLookupRequestFor, isSuggestRequestFor } from '@testing/pdok-requests';
 import { App } from './app';
 
@@ -240,6 +247,23 @@ describe('App', () => {
 
     expect(combobox.getAttribute('aria-expanded')).toBe('false');
     expect(optionsOf(page, combobox)).toEqual([]);
+    expect(statusMessages(page)).toEqual(['']);
+  });
+
+  // Screen readers can miss a live region that is added together with its text.
+  it('has an empty status region before searching', () => {
+    expect(statusMessages(page)).toEqual(['']);
+  });
+
+  it.each([
+    { query: 'damrak', response: SUGGEST_DAMRAK, message: '3 adressen gevonden' },
+    { query: 'damrak 201 amsterdam', response: SUGGEST_DAMRAK_201, message: '1 adres gevonden' },
+    { query: 'xqzvw', response: SUGGEST_NONE, message: 'Geen adressen gevonden' },
+  ])('announces "$message" in the status region', async ({ query, response, message }) => {
+    (await searchFor(page, query)).flush(response);
+    await advance();
+
+    expect(statusMessages(page)).toEqual([message]);
   });
 
   it('shows the details of the chosen address', async () => {
@@ -258,17 +282,17 @@ describe('App', () => {
     expect(definitionOf(page, 'Gemeente')).toBe('Amsterdam');
   });
 
-  it('shows an error message when searching fails', async () => {
+  it('announces an error message when searching fails', async () => {
     (await searchFor(page, 'damrak')).flush(null, {
       status: 500,
       statusText: 'Internal Server Error',
     });
     await advance();
 
-    expect(page.textContent).toContain('Er ging iets mis bij het zoeken. Probeer het opnieuw.');
+    expect(statusMessages(page)).toEqual(['Er ging iets mis bij het zoeken. Probeer het opnieuw.']);
   });
 
-  it('shows an error message when the address details are not found', async () => {
+  it('announces an error message when the address details are not found', async () => {
     (await searchFor(page, 'damrak')).flush(SUGGEST_DAMRAK);
     await advance();
 
@@ -277,8 +301,9 @@ describe('App', () => {
     http.expectOne(isLookupRequestFor('adr-damrak-18-1')).flush(LOOKUP_NOT_FOUND);
     await advance();
 
-    expect(page.textContent).toContain(
+    expect(statusMessages(page)).toEqual([
+      '',
       'De details van dit adres konden niet worden opgehaald. Probeer het opnieuw.',
-    );
+    ]);
   });
 });
