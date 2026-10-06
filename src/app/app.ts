@@ -6,6 +6,7 @@ import { AddressMap } from './address-map/address-map';
 import { AddressSearch } from './address-search/address-search';
 
 export const REPO_URL = 'https://github.com/stefanlemmen/toegankelijke-adreszoeker';
+export const MAP_LICENCE_URL = 'https://creativecommons.org/licenses/by/4.0/deed.nl';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +16,7 @@ export const REPO_URL = 'https://github.com/stefanlemmen/toegankelijke-adreszoek
 })
 export class App {
   protected readonly repoUrl = REPO_URL;
+  protected readonly mapLicenceUrl = MAP_LICENCE_URL;
   protected readonly selectedId = signal<string | undefined>(undefined);
 
   // One lookup for both the details and the map.
