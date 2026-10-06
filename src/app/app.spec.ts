@@ -222,6 +222,20 @@ describe('App', () => {
     await searchFor(page, 'da');
   });
 
+  it('removes the suggestions when the query drops below 2 characters', async () => {
+    const combobox = inputLabelled(page, 'Adres');
+    (await searchFor(page, 'da')).flush(SUGGEST_DAMRAK);
+    await advance();
+    expect(optionsOf(page, combobox)).toHaveLength(3);
+
+    typeInto(combobox, 'd');
+    await advance(DEBOUNCE_MS);
+    http.expectNone(() => true);
+
+    expect(combobox.getAttribute('aria-expanded')).toBe('false');
+    expect(optionsOf(page, combobox)).toEqual([]);
+  });
+
   it('shows the details of the chosen address', async () => {
     (await searchFor(page, 'damrak')).flush(SUGGEST_DAMRAK);
     await advance();
