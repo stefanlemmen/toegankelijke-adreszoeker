@@ -73,9 +73,11 @@ describe('App', () => {
     ]);
   });
 
-  it('describes the search field with an example address', () => {
+  it('describes the search field with the minimum length and an example address', () => {
     const combobox = inputLabelled(page, 'Adres');
-    expect(descriptionOf(page, combobox)).toBe('Bijvoorbeeld: Damrak 1 Amsterdam');
+    expect(descriptionOf(page, combobox)).toBe(
+      'Minimaal 2 tekens, bijvoorbeeld: Damrak 1 Amsterdam',
+    );
   });
 
   it('links to the source code in the page footer, in the same tab', () => {
