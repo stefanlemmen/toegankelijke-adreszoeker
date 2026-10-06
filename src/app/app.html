@@ -1,10 +1,12 @@
 <main>
-  <h1>Adreszoeker</h1>
-  <app-address-search (selected)="selectedId.set($event)" />
+  <div>
+    <h1>Adreszoeker</h1>
+    <app-address-search (selected)="selectedId.set($event)" />
 
-  @if (selectedId()) {
-    <app-address-details [address]="address()" [failed]="lookupFailed()" />
-  }
+    @if (selectedId()) {
+      <app-address-details [address]="address()" [failed]="lookupFailed()" />
+    }
+  </div>
   <app-address-map [address]="address()" />
 </main>
 <footer>

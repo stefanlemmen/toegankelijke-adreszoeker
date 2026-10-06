@@ -12,6 +12,21 @@ main {
   inline-size: 100%;
 }
 
+/* Wide screen: a fixed panel on the left, the map fills the rest; the panel never covers the map. */
+@media (min-width: 48rem) {
+  main {
+    display: grid;
+    grid-template-columns: 24rem 1fr;
+    flex: 1;
+    max-width: none;
+    padding: 0;
+  }
+
+  main > div {
+    padding: var(--space);
+  }
+}
+
 /* Narrow screen: source link and credit stacked, centred. */
 footer {
   display: flex;
