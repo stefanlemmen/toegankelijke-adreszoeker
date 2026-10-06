@@ -259,6 +259,51 @@ describe('App', () => {
     expect(page.textContent).toContain('Damrak 1, 1012LG Amsterdam');
   });
 
+  it('keeps the previous suggestions while the next search loads', async () => {
+    const combobox = inputLabelled(page, 'Adres');
+    (await searchFor(page, 'damrak')).flush(SUGGEST_DAMRAK);
+    await advance();
+    const damrak201 = elementWithText(page, 'Damrak 201, Amsterdam');
+
+    const next = await searchFor(page, 'damrak 201 amsterdam');
+    await advance();
+
+    expect(combobox.getAttribute('aria-expanded')).toBe('true');
+    expect(optionsOf(page, combobox)).toEqual([
+      'Damrak 18-1, Amsterdam',
+      'Damrak 201, Amsterdam',
+      'Damrak 1, 1012LG Amsterdam',
+    ]);
+
+    next.flush(SUGGEST_DAMRAK_201);
+    await advance();
+
+    expect(optionsOf(page, combobox)).toEqual(['Damrak 201, Amsterdam']);
+    // Only the changed options are re-rendered: the one in both results stays the same element.
+    expect(elementWithText(page, 'Damrak 201, Amsterdam')).toBe(damrak201);
+    expect(await axeViolations(page)).toEqual([]);
+  });
+
+  // The previous suggestions stay while the next search loads, but no longer match the typed text.
+  it('does not keep an active option when typing again', async () => {
+    const combobox = inputLabelled(page, 'Adres');
+    (await searchFor(page, 'damrak')).flush(SUGGEST_DAMRAK);
+    await advance();
+    pressKey(combobox, 'ArrowDown');
+    await advance();
+
+    const next = await searchFor(page, 'damrak 201 amsterdam');
+    await advance();
+    expect(activeOptionOf(page, combobox)).toBeUndefined();
+
+    pressKey(combobox, 'Enter');
+    await advance();
+    http.expectNone(isLookupRequestFor('adr-damrak-18-1'));
+    expect(combobox.value).toBe('damrak 201 amsterdam');
+
+    next.flush(SUGGEST_DAMRAK_201);
+  });
+
   it('only searches from 2 characters', async () => {
     typeInto(inputLabelled(page, 'Adres'), 'd');
     await advance(DEBOUNCE_MS);

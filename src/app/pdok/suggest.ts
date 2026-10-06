@@ -9,7 +9,7 @@ const suggestResponse = z.object({
   response: z.object({ docs: z.array(suggestion) }),
 });
 
-type Suggestion = z.infer<typeof suggestion>;
+export type Suggestion = z.infer<typeof suggestion>;
 
 /** No request until there is something to search for. */
 export function suggestRequest(query: string): HttpResourceRequest | undefined {
