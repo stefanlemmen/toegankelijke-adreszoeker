@@ -12,6 +12,8 @@ import {
   definitionOf,
   descriptionOf,
   elementWithText,
+  headings,
+  imageNames,
   inputLabelled,
   optionsOf,
   pressKey,
@@ -30,6 +32,10 @@ import { App } from './app';
 
 // From the agreed plan, not from the implementation.
 const DEBOUNCE_MS = 300;
+
+// The zoom-17 tile around Damrak 18-1, fetched from PDOK and checked by eye: the Damrak is in it.
+const DAMRAK_TILE = 'EPSG:3857/17/67319/43071.png';
+const TILES_URL = 'https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0';
 
 async function searchFor(page: HTMLElement, query: string): Promise<TestRequest> {
   typeInto(inputLabelled(page, 'Adres'), query);
@@ -96,6 +102,25 @@ describe('App', () => {
     const footer = link.closest('footer');
     expect(footer).not.toBeNull();
     expect(footer?.closest('main, article, aside, nav, section')).toBeNull();
+  });
+
+  it('credits the map with its licence in the page footer', async () => {
+    const licence = elementWithText(page, 'CC BY 4.0');
+    if (!(licence instanceof HTMLAnchorElement)) {
+      throw new Error('"CC BY 4.0" is not a link');
+    }
+    // From the Creative Commons licence deed, not from the implementation.
+    expect(licence.getAttribute('href')).toBe(
+      'https://creativecommons.org/licenses/by/4.0/deed.nl',
+    );
+    expect(licence.hasAttribute('target')).toBe(false);
+    expect(licence.parentElement?.textContent?.trim()).toBe(
+      'Kaart: BRT Achtergrondkaart, Kadaster, CC BY 4.0',
+    );
+
+    const footer = licence.closest('footer');
+    expect(footer?.contains(elementWithText(page, 'Broncode op GitHub'))).toBe(true);
+    expect(await axeViolations(page)).toEqual([]);
   });
 
   it('moves the active option with the arrow keys, wrapping at both ends', async () => {
@@ -398,6 +423,52 @@ describe('App', () => {
     expect(definitionOf(page, 'Woonplaats')).toBe('Amsterdam');
     expect(definitionOf(page, 'Gemeente')).toBe('Amsterdam');
     expect(await axeViolations(page)).toEqual([]);
+  });
+
+  it('shows a map of the chosen address, named after it', async () => {
+    (await searchFor(page, 'damrak')).flush(SUGGEST_DAMRAK);
+    await advance();
+
+    elementWithText(page, 'Damrak 18-1, Amsterdam').click();
+    await advance();
+    http.expectOne(isLookupRequestFor('adr-damrak-18-1')).flush(LOOKUP_DAMRAK_18_1);
+    await advance();
+
+    expect(imageNames(page)).toEqual(['Kaart met de ligging van Damrak 18-1, Amsterdam']);
+    expect(await axeViolations(page)).toEqual([]);
+  });
+
+  it('heads the details of the chosen address, below the page heading', async () => {
+    expect(headings(page)).toEqual(['Adreszoeker']);
+
+    (await searchFor(page, 'damrak')).flush(SUGGEST_DAMRAK);
+    await advance();
+
+    elementWithText(page, 'Damrak 18-1, Amsterdam').click();
+    await advance();
+    http.expectOne(isLookupRequestFor('adr-damrak-18-1')).flush(LOOKUP_DAMRAK_18_1);
+    await advance();
+
+    expect(headings(page)).toEqual(['Adreszoeker', 'Gekozen adres']);
+    expect(page.querySelector('h2')?.textContent?.trim()).toBe('Gekozen adres');
+    expect(await axeViolations(page)).toEqual([]);
+  });
+
+  it('shows a map of the Netherlands before an address is chosen', () => {
+    expect(imageNames(page)).toEqual(['Kaart van Nederland']);
+  });
+
+  it('shows the map tiles of the chosen address', async () => {
+    (await searchFor(page, 'damrak')).flush(SUGGEST_DAMRAK);
+    await advance();
+
+    elementWithText(page, 'Damrak 18-1, Amsterdam').click();
+    await advance();
+    http.expectOne(isLookupRequestFor('adr-damrak-18-1')).flush(LOOKUP_DAMRAK_18_1);
+    await advance();
+
+    const tiles = [...page.querySelectorAll('img')].map((img) => img.src);
+    expect(tiles).toContain(`${TILES_URL}/standaard/${DAMRAK_TILE}`);
   });
 
   it('announces that it is searching until the results arrive', async () => {

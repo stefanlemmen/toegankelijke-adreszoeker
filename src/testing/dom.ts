@@ -109,3 +109,17 @@ export function activeOptionOf(root: HTMLElement, combobox: HTMLElement): string
   }
   return selected[0].textContent?.trim() ?? '';
 }
+
+/** The accessible names of the images: `role="img"` by `aria-label`, `<img>` by non-empty `alt`. */
+export function imageNames(root: HTMLElement): string[] {
+  return [...root.querySelectorAll<HTMLElement>('[role="img"], img:not([alt=""])')].map(
+    (image) => image.getAttribute('aria-label') ?? image.getAttribute('alt') ?? '',
+  );
+}
+
+/** The text of every heading (`h1`–`h6`), in document order. */
+export function headings(root: HTMLElement): string[] {
+  return [...root.querySelectorAll('h1, h2, h3, h4, h5, h6')].map(
+    (heading) => heading.textContent?.trim() ?? '',
+  );
+}

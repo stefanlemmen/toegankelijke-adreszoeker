@@ -1,7 +1,9 @@
 <search>
   <form [formRoot]="searchForm" autocomplete="off">
     <label for="query">Adres</label>
-    <p id="query-hint" class="hint">{{ hint }}</p>
+    <p id="query-hint" class="hint">
+      {{ hint }} <span>{{ example }}</span>
+    </p>
     <input
       type="text"
       id="query"

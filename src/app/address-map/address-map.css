@@ -1,0 +1,39 @@
+/* A plain area when the tiles don't load; search and details don't depend on them. */
+:host {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  block-size: 20rem;
+  background: var(--color-hover);
+}
+
+/* Wide screen: the map stretches to the height of its grid cell in App. */
+@media (min-width: 48rem) {
+  :host {
+    block-size: auto;
+  }
+}
+
+/* The grid's top-left corner sits in the middle; the translate binding shifts the address onto it. */
+[role='img'] {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  grid-template-columns: repeat(var(--columns), var(--tile-size));
+}
+
+/* Dark mode: PDOK has no dark map (`grijs` is light), so dim the standard one; the marker stays outside the filter. */
+@media (prefers-color-scheme: dark) {
+  [role='img'] {
+    filter: brightness(0.6);
+  }
+}
+
+/* The pin's tip on the address. */
+.marker {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -100%;
+}

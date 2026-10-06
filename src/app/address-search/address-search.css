@@ -8,6 +8,11 @@ label {
   color: var(--color-text-muted);
 }
 
+/* The example address moves to the next line as a whole, and only wraps itself when a line is too narrow for it. */
+.hint span {
+  display: inline-block;
+}
+
 input {
   width: 100%;
   padding: 0.5rem;
@@ -29,6 +34,8 @@ input {
   margin-block-start: 0.25rem;
   border: 2px solid var(--color-border);
   border-radius: 0.25rem;
+  /* Like the input: the hover colour must differ from the panel behind it. */
+  background: var(--color-background);
 }
 
 [role='option'] {

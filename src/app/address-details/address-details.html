@@ -1,20 +1,21 @@
 <!-- Always rendered: screen readers can miss a live region added together with its text. -->
 <p role="status">
-  @if (address.error()) {
+  @if (failed()) {
     {{ lookupError }}
   }
 </p>
-@if (address.hasValue()) {
+@if (address(); as address) {
+  <h2>Gekozen adres</h2>
   <dl>
     <dt>Straat</dt>
-    <dd>{{ address.value().straatnaam }}</dd>
+    <dd>{{ address.straatnaam }}</dd>
     <dt>Huisnummer</dt>
-    <dd>{{ address.value().huis_nlt }}</dd>
+    <dd>{{ address.huis_nlt }}</dd>
     <dt>Postcode</dt>
-    <dd>{{ address.value().postcode ?? unknown }}</dd>
+    <dd>{{ address.postcode ?? unknown }}</dd>
     <dt>Woonplaats</dt>
-    <dd>{{ address.value().woonplaatsnaam }}</dd>
+    <dd>{{ address.woonplaatsnaam }}</dd>
     <dt>Gemeente</dt>
-    <dd>{{ address.value().gemeentenaam }}</dd>
+    <dd>{{ address.gemeentenaam }}</dd>
   </dl>
 }
