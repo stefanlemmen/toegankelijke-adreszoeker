@@ -103,6 +103,25 @@ describe('App', () => {
     expect(footer?.closest('main, article, aside, nav, section')).toBeNull();
   });
 
+  it('credits the map with its licence in the page footer', async () => {
+    const licence = elementWithText(page, 'CC BY 4.0');
+    if (!(licence instanceof HTMLAnchorElement)) {
+      throw new Error('"CC BY 4.0" is not a link');
+    }
+    // From the Creative Commons licence deed, not from the implementation.
+    expect(licence.getAttribute('href')).toBe(
+      'https://creativecommons.org/licenses/by/4.0/deed.nl',
+    );
+    expect(licence.hasAttribute('target')).toBe(false);
+    expect(licence.parentElement?.textContent?.trim()).toBe(
+      'Kaart: BRT Achtergrondkaart, Kadaster, CC BY 4.0',
+    );
+
+    const footer = licence.closest('footer');
+    expect(footer?.contains(elementWithText(page, 'Broncode op GitHub'))).toBe(true);
+    expect(await axeViolations(page)).toEqual([]);
+  });
+
   it('moves the active option with the arrow keys, wrapping at both ends', async () => {
     const combobox = inputLabelled(page, 'Adres');
     (await searchFor(page, 'damrak')).flush(SUGGEST_DAMRAK);
