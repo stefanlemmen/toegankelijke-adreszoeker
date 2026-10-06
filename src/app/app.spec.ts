@@ -32,6 +32,10 @@ import { App } from './app';
 // From the agreed plan, not from the implementation.
 const DEBOUNCE_MS = 300;
 
+// The zoom-17 tile around Damrak 18-1, fetched from PDOK and checked by eye: the Damrak is in it.
+const DAMRAK_TILE = 'EPSG:3857/17/67319/43071.png';
+const TILES_URL = 'https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0';
+
 async function searchFor(page: HTMLElement, query: string): Promise<TestRequest> {
   typeInto(inputLabelled(page, 'Adres'), query);
   await advance(DEBOUNCE_MS);
@@ -410,8 +414,29 @@ describe('App', () => {
     http.expectOne(isLookupRequestFor('adr-damrak-18-1')).flush(LOOKUP_DAMRAK_18_1);
     await advance();
 
-    expect(imageNames(page)).toContain('Kaart met de ligging van Damrak 18-1, Amsterdam');
+    expect(imageNames(page)).toEqual(['Kaart met de ligging van Damrak 18-1, Amsterdam']);
     expect(await axeViolations(page)).toEqual([]);
+  });
+
+  it('shows a map of the Netherlands before an address is chosen', () => {
+    expect(imageNames(page)).toEqual(['Kaart van Nederland']);
+  });
+
+  it('shows the map tiles of the chosen address, grey in dark mode', async () => {
+    (await searchFor(page, 'damrak')).flush(SUGGEST_DAMRAK);
+    await advance();
+
+    elementWithText(page, 'Damrak 18-1, Amsterdam').click();
+    await advance();
+    http.expectOne(isLookupRequestFor('adr-damrak-18-1')).flush(LOOKUP_DAMRAK_18_1);
+    await advance();
+
+    const lightTiles = [...page.querySelectorAll('img')].map((img) => img.src);
+    const darkTiles = [
+      ...page.querySelectorAll('source[media="(prefers-color-scheme: dark)"]'),
+    ].map((source) => source.getAttribute('srcset'));
+    expect(lightTiles).toContain(`${TILES_URL}/standaard/${DAMRAK_TILE}`);
+    expect(darkTiles).toContain(`${TILES_URL}/grijs/${DAMRAK_TILE}`);
   });
 
   it('announces that it is searching until the results arrive', async () => {
