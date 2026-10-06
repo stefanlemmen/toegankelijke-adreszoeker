@@ -284,6 +284,40 @@ describe('App', () => {
     expect(statusMessages(page)).toEqual([message]);
   });
 
+  it('announces that the field was cleared with Escape', async () => {
+    const combobox = inputLabelled(page, 'Adres');
+    (await searchFor(page, 'damrak')).flush(SUGGEST_DAMRAK);
+    await advance();
+
+    pressKey(combobox, 'Escape');
+    await advance();
+    pressKey(combobox, 'Escape');
+    await advance();
+
+    expect(statusMessages(page)).toEqual(['Zoekveld gewist']);
+    expect(await axeViolations(page)).toEqual([]);
+  });
+
+  it('removes the cleared message when typing again', async () => {
+    const combobox = inputLabelled(page, 'Adres');
+    typeInto(combobox, 'damrak');
+    await advance();
+    pressKey(combobox, 'Escape');
+    await advance();
+
+    typeInto(combobox, 'd');
+    await advance(DEBOUNCE_MS);
+
+    expect(statusMessages(page)).toEqual(['']);
+  });
+
+  it('announces nothing when Escape is pressed in an empty field', async () => {
+    pressKey(inputLabelled(page, 'Adres'), 'Escape');
+    await advance();
+
+    expect(statusMessages(page)).toEqual(['']);
+  });
+
   it('shows the details of the chosen address', async () => {
     (await searchFor(page, 'damrak')).flush(SUGGEST_DAMRAK);
     await advance();
