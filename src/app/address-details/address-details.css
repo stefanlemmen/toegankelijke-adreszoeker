@@ -1,3 +1,9 @@
+/* The details stack when their own width is small, also with large text. */
+:host {
+  display: block;
+  container-type: inline-size;
+}
+
 [role='status'] {
   margin-block: 0.5rem;
 }
@@ -12,7 +18,19 @@ dl {
   display: grid;
   grid-template-columns: max-content 1fr;
   gap: 0.25rem var(--space);
-  margin: 0;
+  margin: 0 0 var(--space);
+}
+
+/* Too narrow for a label column next to the values: each label above its value. */
+@container (max-width: 16em) {
+  dl {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  dd + dt {
+    margin-block-start: 0.5rem;
+  }
 }
 
 dt {

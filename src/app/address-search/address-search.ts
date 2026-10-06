@@ -5,7 +5,8 @@ import { parseSuggestions, Suggestion, suggestRequest } from '@app/pdok/suggest'
 
 const SEARCH_DEBOUNCE_MS = 300;
 const MIN_QUERY_LENGTH = 2;
-const HINT = `Minimaal ${MIN_QUERY_LENGTH} tekens, bijvoorbeeld: Damrak 1 Amsterdam`;
+const HINT = `Minimaal ${MIN_QUERY_LENGTH} tekens, bijvoorbeeld:`;
+const EXAMPLE = 'Damrak 1 Amsterdam';
 const SEARCH_ERROR = 'Er ging iets mis bij het zoeken. Probeer het opnieuw.';
 const SEARCHING = 'Zoeken…';
 const CLEARED = 'Zoekveld gewist';
@@ -36,6 +37,7 @@ export class AddressSearch {
   readonly selected = output<string>();
 
   protected readonly hint = HINT;
+  protected readonly example = EXAMPLE;
 
   private readonly search = signal({ query: '' });
   protected readonly searchForm = form(this.search, (path) => {

@@ -8,6 +8,11 @@ label {
   color: var(--color-text-muted);
 }
 
+/* The example address moves to the next line as a whole, and only wraps itself when a line is too narrow for it. */
+.hint span {
+  display: inline-block;
+}
+
 input {
   width: 100%;
   padding: 0.5rem;
