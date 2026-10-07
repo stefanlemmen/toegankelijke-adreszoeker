@@ -1,0 +1,4 @@
+.*
+!.prettierrc
+!.github/
+!.zed/
