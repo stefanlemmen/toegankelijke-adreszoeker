@@ -163,7 +163,7 @@ Als er resultaten zijn, zegt VoiceOver "expanded, list 10 items" en slaat het de
 - **Tests via de DOM**, zoals een gebruiker de app ziet (Vitest, axe-core); alleen de netwerkverzoeken worden gesimuleerd, met echte, ingekorte PDOK-antwoorden.
 - **Kaart zonder kaartbibliotheek:** statische tegels van de PDOK BRT Achtergrondkaart als raster van `<img>`; de app berekent uit de coördinaten welke tegels nodig zijn, en CSS zet het adres precies in het midden. Geen nieuwe dependency.
 - **CSS** zonder framework: kleuren als custom properties met `light-dark()`, zodat de app de lichte of donkere weergave van het systeem volgt.
-- **Open Sans, zelf gehost:** twee woff2-bestanden (Latijns en uitgebreid Latijns, variabel gewicht) in de repository, zodat de browser van een bezoeker geen fontserver van derden aanroept. Het uitgebreide bestand laadt alleen als een adres zo'n teken bevat.
+- **Open Sans, zelf gehost:** woff2-bestanden (rechtop en cursief, elk Latijns en uitgebreid Latijns, variabel gewicht) in de repository, zodat de browser van een bezoeker geen fontserver van derden aanroept. Het uitgebreide bestand laadt alleen als een adres zo'n teken bevat.
 - **GitHub Actions** draait bij elke pull request en push naar `main` format, typecheck, lint, tests en build, en publiceert `main` daarna op GitHub Pages.
 
 ## Lokaal starten
