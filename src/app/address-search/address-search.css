@@ -9,8 +9,9 @@ label {
 }
 
 /* The example address moves to the next line as a whole, and only wraps itself when a line is too narrow for it. */
-.hint span {
+.example {
   display: inline-block;
+  font-style: italic;
 }
 
 input {
