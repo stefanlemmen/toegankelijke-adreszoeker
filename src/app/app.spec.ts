@@ -395,6 +395,26 @@ describe('App', () => {
     ]);
   });
 
+  it('searches for the correction after the debounce, with focus in the search field', async () => {
+    const combobox = inputLabelled(page, 'Adres');
+    (await searchFor(page, 'darmak')).flush(SUGGEST_DARMAK);
+    await advance();
+
+    buttonNamed(page, 'damrak').click();
+    await advance();
+
+    expect(combobox.value).toBe('damrak');
+    expect(document.activeElement).toBe(combobox);
+
+    await advance(DEBOUNCE_MS - 1);
+    http.expectNone(isSuggestRequestFor('damrak'));
+    await advance(1);
+    http.expectOne(isSuggestRequestFor('damrak')).flush(SUGGEST_DAMRAK);
+    await advance();
+
+    expect(statusMessages(page)).toEqual(['3 adressen gevonden']);
+  });
+
   it('announces that the field was cleared with Escape', async () => {
     const combobox = inputLabelled(page, 'Adres');
     (await searchFor(page, 'damrak')).flush(SUGGEST_DAMRAK);
