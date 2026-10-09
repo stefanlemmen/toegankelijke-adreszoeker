@@ -10,6 +10,7 @@ const EXAMPLE = 'Damrak 1 Amsterdam';
 const SEARCH_ERROR = 'Er ging iets mis bij het zoeken. Probeer het opnieuw.';
 const SEARCHING = 'Zoeken…';
 const CLEARED = 'Zoekveld gewist';
+const DID_YOU_MEAN = 'Bedoelt u';
 
 function foundMessage(count: number): string {
   if (count === 0) {
@@ -38,6 +39,7 @@ export class AddressSearch {
 
   protected readonly hint = HINT;
   protected readonly example = EXAMPLE;
+  protected readonly didYouMean = DID_YOU_MEAN;
 
   private readonly search = signal({ query: '' });
   protected readonly searchForm = form(this.search, (path) => {
@@ -81,6 +83,12 @@ export class AddressSearch {
     return index === undefined ? null : `address-option-${index}`;
   });
   protected readonly expanded = computed(() => this.options().length > 0);
+  protected readonly correction = computed(() =>
+    !this.cleared() && this.suggestions.status() === 'resolved'
+      ? this.suggestions.value().correction
+      : undefined,
+  );
+
   // Counts the results, not the options: closing the list with Escape keeps the results.
   protected readonly statusMessage = computed(() => {
     if (this.cleared()) {
@@ -89,8 +97,10 @@ export class AddressSearch {
     switch (this.suggestions.status()) {
       case 'error':
         return SEARCH_ERROR;
-      case 'resolved':
-        return foundMessage(this.results().length);
+      case 'resolved': {
+        const found = foundMessage(this.results().length);
+        return this.correction() ? `${found}.` : found;
+      }
       case 'loading':
         return SEARCHING;
       default:

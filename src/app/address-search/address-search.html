@@ -35,5 +35,10 @@
     }
   </ul>
   <!-- Always rendered: screen readers can miss a live region added together with its text. -->
-  <p role="status">{{ statusMessage() }}</p>
+  <p role="status">
+    {{ statusMessage() }}
+    @if (correction(); as correction) {
+      {{ didYouMean }} <button type="button">{{ correction }}</button>?
+    }
+  </p>
 </search>
