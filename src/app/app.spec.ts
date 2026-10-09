@@ -415,6 +415,31 @@ describe('App', () => {
     expect(statusMessages(page)).toEqual(['3 adressen gevonden']);
   });
 
+  it('removes the correction when the field is cleared with Escape', async () => {
+    const combobox = inputLabelled(page, 'Adres');
+    (await searchFor(page, 'darmak')).flush(SUGGEST_DARMAK);
+    await advance();
+
+    pressKey(combobox, 'Escape');
+    await advance();
+
+    expect(statusMessages(page)).toEqual(['Zoekveld gewist']);
+    expect(page.querySelector('button')).toBeNull();
+  });
+
+  it('removes the correction while the next search loads', async () => {
+    (await searchFor(page, 'darmak')).flush(SUGGEST_DARMAK);
+    await advance();
+
+    const next = await searchFor(page, 'darmakk');
+    await advance();
+
+    expect(statusMessages(page)).toEqual(['Zoeken…']);
+    expect(page.querySelector('button')).toBeNull();
+
+    next.flush(SUGGEST_NONE);
+  });
+
   it('announces that the field was cleared with Escape', async () => {
     const combobox = inputLabelled(page, 'Adres');
     (await searchFor(page, 'damrak')).flush(SUGGEST_DAMRAK);

@@ -16,10 +16,13 @@ export const SUGGEST_DAMRAK_201 = {
   },
 };
 
-/** `suggest?q=xqzvw&fq=type:adres`: no matches. */
+/** `suggest?q=xqzvw&fq=type:adres`: no matches and no corrections. */
 export const SUGGEST_NONE = {
   response: {
     docs: [],
+  },
+  spellcheck: {
+    collations: [],
   },
 };
 
