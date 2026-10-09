@@ -9,6 +9,7 @@ import { axeViolations } from '@testing/axe';
 import {
   activeOptionOf,
   advance,
+  buttonNamed,
   definitionOf,
   descriptionOf,
   elementWithText,
@@ -25,6 +26,8 @@ import {
   LOOKUP_NOT_FOUND,
   SUGGEST_DAMRAK,
   SUGGEST_DAMRAK_201,
+  SUGGEST_DARMAK,
+  SUGGEST_DARMAK_18_AMSTERDM,
   SUGGEST_NONE,
 } from '@testing/pdok-fixtures';
 import { isLookupRequestFor, isSuggestRequestFor } from '@testing/pdok-requests';
@@ -372,6 +375,86 @@ describe('App', () => {
     await advance();
 
     expect(statusMessages(page)).toEqual([message]);
+  });
+
+  it('suggests the correction with the most hits when nothing is found', async () => {
+    (await searchFor(page, 'darmak')).flush(SUGGEST_DARMAK);
+    await advance();
+
+    expect(statusMessages(page)).toEqual(['Geen adressen gevonden. Bedoelt u damrak?']);
+    expect(buttonNamed(page, 'damrak').closest('[role="status"]')).not.toBeNull();
+    expect(await axeViolations(page)).toEqual([]);
+  });
+
+  it('suggests the longest correction when corrections have equal hits', async () => {
+    (await searchFor(page, 'Darmak 18 amsterdm')).flush(SUGGEST_DARMAK_18_AMSTERDM);
+    await advance();
+
+    expect(statusMessages(page)).toEqual([
+      'Geen adressen gevonden. Bedoelt u damrak 18 amsterdam?',
+    ]);
+  });
+
+  it('searches for the correction after the debounce, with focus in the search field', async () => {
+    const combobox = inputLabelled(page, 'Adres');
+    (await searchFor(page, 'darmak')).flush(SUGGEST_DARMAK);
+    await advance();
+
+    buttonNamed(page, 'damrak').click();
+    await advance();
+
+    expect(combobox.value).toBe('damrak');
+    expect(document.activeElement).toBe(combobox);
+
+    await advance(DEBOUNCE_MS - 1);
+    http.expectNone(isSuggestRequestFor('damrak'));
+    await advance(1);
+    http.expectOne(isSuggestRequestFor('damrak')).flush(SUGGEST_DAMRAK);
+    await advance();
+
+    expect(statusMessages(page)).toEqual(['3 adressen gevonden']);
+  });
+
+  it.each([
+    { how: 'activating it', act: () => buttonNamed(page, 'damrak').click() },
+    { how: 'typing', act: () => typeInto(inputLabelled(page, 'Adres'), 'darmakk') },
+  ])('removes the correction right after $how, before the debounce', async ({ act }) => {
+    (await searchFor(page, 'darmak')).flush(SUGGEST_DARMAK);
+    await advance();
+
+    act();
+    await advance();
+
+    expect(statusMessages(page)).toEqual(['Geen adressen gevonden']);
+    expect(page.querySelector('button')).toBeNull();
+
+    await advance(DEBOUNCE_MS);
+    http.expectOne(() => true).flush(SUGGEST_NONE);
+  });
+
+  it('removes the correction when the field is cleared with Escape', async () => {
+    const combobox = inputLabelled(page, 'Adres');
+    (await searchFor(page, 'darmak')).flush(SUGGEST_DARMAK);
+    await advance();
+
+    pressKey(combobox, 'Escape');
+    await advance();
+
+    expect(statusMessages(page)).toEqual(['Zoekveld gewist']);
+    expect(page.querySelector('button')).toBeNull();
+  });
+
+  it('removes the correction while the next search loads', async () => {
+    (await searchFor(page, 'darmak')).flush(SUGGEST_DARMAK);
+    await advance();
+
+    const next = await searchFor(page, 'darmakk');
+    await advance();
+
+    expect(statusMessages(page)).toEqual(['Zoeken…']);
+    expect(page.querySelector('button')).toBeNull();
+
+    next.flush(SUGGEST_NONE);
   });
 
   it('announces that the field was cleared with Escape', async () => {

@@ -75,10 +75,18 @@ export function descriptionOf(root: HTMLElement, element: HTMLElement): string {
     .join(' ');
 }
 
-/** The text of every `role="status"` live region, in document order; empty ones included. */
+export function buttonNamed(root: HTMLElement, name: string): HTMLButtonElement {
+  const button = [...root.querySelectorAll('button')].find((b) => b.textContent?.trim() === name);
+  if (!button) {
+    throw new Error(`No button named "${name}"`);
+  }
+  return button;
+}
+
+/** The rendered text of every `role="status"` live region, in document order; empty ones included. */
 export function statusMessages(root: HTMLElement): string[] {
   return [...root.querySelectorAll('[role="status"]')].map(
-    (status) => status.textContent?.trim() ?? '',
+    (status) => status.textContent?.replace(/\s+/g, ' ').trim() ?? '',
   );
 }
 

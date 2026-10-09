@@ -7,6 +7,7 @@
     <input
       type="text"
       id="query"
+      #queryInput
       [formField]="searchForm.query"
       role="combobox"
       aria-autocomplete="list"
@@ -35,5 +36,11 @@
     }
   </ul>
   <!-- Always rendered: screen readers can miss a live region added together with its text. -->
-  <p role="status">{{ statusMessage() }}</p>
+  <p role="status">
+    {{ statusMessage() }}
+    @if (correction(); as correction) {
+      {{ didYouMean }}
+      <button type="button" (click)="searchCorrection(correction)">{{ correction }}</button>?
+    }
+  </p>
 </search>

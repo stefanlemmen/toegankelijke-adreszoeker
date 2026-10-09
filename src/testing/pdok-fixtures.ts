@@ -16,10 +16,47 @@ export const SUGGEST_DAMRAK_201 = {
   },
 };
 
-/** `suggest?q=xqzvw&fq=type:adres`: no matches. */
+/** `suggest?q=xqzvw&fq=type:adres`: no matches and no corrections. */
 export const SUGGEST_NONE = {
   response: {
     docs: [],
+  },
+  spellcheck: {
+    collations: [],
+  },
+};
+
+/** `suggest?q=darmak&fq=type:adres`: no matches, three corrections, not sorted by hits. */
+export const SUGGEST_DARMAK = {
+  response: {
+    docs: [],
+  },
+  spellcheck: {
+    collations: [
+      'collation',
+      { collationQuery: 'damrak', hits: 271 },
+      'collation',
+      { collationQuery: 'dormak', hits: 2 },
+      'collation',
+      { collationQuery: 'damak', hits: 47 },
+    ],
+  },
+};
+
+/** `suggest?q=Darmak 18 amsterdm&fq=type:adres`: no matches, three corrections with equal hits. */
+export const SUGGEST_DARMAK_18_AMSTERDM = {
+  response: {
+    docs: [],
+  },
+  spellcheck: {
+    collations: [
+      'collation',
+      { collationQuery: 'damrak 18 amsterda', hits: 2 },
+      'collation',
+      { collationQuery: 'damrak 18 amsterdam', hits: 2 },
+      'collation',
+      { collationQuery: 'damrak 18 amsterd', hits: 2 },
+    ],
   },
 };
 

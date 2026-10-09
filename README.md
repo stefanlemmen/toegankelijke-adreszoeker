@@ -9,6 +9,7 @@ Een toegankelijke adreszoeker voor Nederlandse adressen, gebouwd volgens het com
 ## Wat de app doet
 
 - Typ minstens 2 tekens van een adres; na een korte pauze verschijnen maximaal 10 suggesties van de PDOK Locatieserver.
+- Vindt een zoekvraag niets door een tikfout, dan stelt de app een correctie voor: "Geen adressen gevonden. Bedoelt u damrak?". Kies je die, dan zoekt de app opnieuw met de correctie.
 - Kies een suggestie met muis of toetsenbord; daaronder verschijnen straat, huisnummer, postcode, woonplaats en gemeente.
 - Een kaart naast het zoekpaneel (op een smal scherm eronder) toont waar het gekozen adres ligt; daarvoor een kaart van Nederland.
 - Geen backend en geen API-key: de app haalt de gegevens rechtstreeks op bij de publieke API.
@@ -26,6 +27,8 @@ De focus blijft in het zoekveld; met deze toetsen bedien je de lijst:
 
 Shift-, Ctrl- en Cmd-combinaties worden door de browser afgehandeld, zodat tekst selecteren en bewerken blijft werken.
 
+Staat er een correctie in de statusregel ("Bedoelt u damrak?"), dan ga je er met Tab naartoe en kies je hem met Enter of Spatie. Daarna staat de focus weer in het zoekveld, zodat je met ↓ meteen door de nieuwe suggesties gaat.
+
 ## Toegankelijkheid
 
 ### Hoe de combobox werkt
@@ -41,6 +44,7 @@ Een screenreader ziet geen kleuren of posities, alleen wat de HTML erover vertel
 - **`aria-selected="true"`**: markeert de actieve suggestie. Visueel krijgt die ook een rand, dus niet alleen een andere kleur.
 - **`aria-describedby`**: koppelt de hint "Minimaal 2 tekens, bijvoorbeeld: Damrak 1 Amsterdam" aan het veld, zodat de screenreader die voorleest zodra het veld de focus krijgt.
 - **`role="status"`**: een vaste regel onder het veld voor meldingen ("Zoeken…", "3 adressen gevonden", "Geen adressen gevonden", foutmeldingen). De screenreader leest die voor zonder dat de focus verspringt. De regel staat er altijd, ook leeg, omdat screenreaders een melding kunnen missen als de regel tegelijk met de tekst verschijnt.
+- **Een `<button>` voor de correctie**, in de statusregel en opgemaakt als link. Het is een knop omdat hij iets op de pagina doet (opnieuw zoeken) en niet naar een andere pagina gaat. De correctie staat zo één keer op de pagina en wordt samen met "Geen adressen gevonden" voorgelezen.
 
 **Waarom de focus in het veld blijft:** zo kun je gewoon doortypen of je zoekvraag verbeteren terwijl je door de suggesties loopt. De suggesties zelf zijn daarom niet met Tab bereikbaar; dat is bewust en volgens het patroon.
 
@@ -73,6 +77,7 @@ Zo klinkt de adreszoeker met VoiceOver in Safari op macOS (oktober 2026). VoiceO
 | Opnieuw `damrak` typen, dan Escape | "collapsed, damrak"                                                                                       |
 | Nog een keer Escape                | "Zoekveld gewist"                                                                                         |
 | `xqzvw` typen (bestaat niet)       | "Geen adressen gevonden"                                                                                  |
+| `darmak` typen (tikfout)           | "Geen adressen gevonden. Bedoelt u damrak ?"                                                              |
 | Rotor (VO+U), Landmarks            | `main`, `search` en `content information`                                                                 |
 
 Na het kiezen lees je met VO+→ eerst de kop ("heading level 2, Gekozen adres") en daarna de details als "description list 5 items", gevolgd door elk label en elke waarde.
@@ -149,11 +154,11 @@ Als er resultaten zijn, zegt VoiceOver "expanded, list 10 items" en slaat het de
 | 3.2.4 Consistent Identification                            | AA     | N.v.t.    | Eén pagina.                                                                                                                                                                                                                      |
 | 3.3.1 Error Identification                                 | A      | Voldoet   | Fouten bij zoeken en ophalen staan als tekst in een statusmelding.                                                                                                                                                               |
 | 3.3.2 Labels or Instructions                               | A      | Voldoet   | Label "Adres" met de minimale lengte en een voorbeeld.                                                                                                                                                                           |
-| 3.3.3 Error Suggestion                                     | AA     | Voldoet   | Foutmeldingen zeggen wat je kunt doen: "Probeer het opnieuw."                                                                                                                                                                    |
+| 3.3.3 Error Suggestion                                     | AA     | Voldoet   | Foutmeldingen zeggen wat je kunt doen: "Probeer het opnieuw." Vindt een zoekvraag niets en kent PDOK een correctie, dan staat die erbij: "Bedoelt u damrak?"                                                                     |
 | 3.3.4 Error Prevention (Legal, Financial, Data)            | AA     | N.v.t.    | Geen juridische of financiële handelingen; er wordt niets opgeslagen.                                                                                                                                                            |
 | 4.1.1 Parsing                                              | A      | Voldoet   | Geldt voor HTML altijd als voldaan (WCAG 2.1, noot bij 4.1.1).                                                                                                                                                                   |
 | 4.1.2 Name, Role, Value                                    | A      | Voldoet   | Zoekveld, lijst en suggesties hebben naam, rol en status (`aria-expanded`, `aria-activedescendant`, `aria-selected`); bevestigd met VoiceOver.                                                                                   |
-| 4.1.3 Status Messages                                      | AA     | Voldoet   | Aantal resultaten, zoeken, fouten en wissen staan in een statusmelding (zie hierboven over VoiceOver).                                                                                                                           |
+| 4.1.3 Status Messages                                      | AA     | Voldoet   | Aantal resultaten, zoeken, fouten, wissen en de correctie staan in een statusmelding (zie hierboven over VoiceOver).                                                                                                             |
 
 ## Technische keuzes
 

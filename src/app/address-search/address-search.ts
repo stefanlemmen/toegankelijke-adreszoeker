@@ -1,7 +1,15 @@
 import { httpResource } from '@angular/common/http';
-import { Component, computed, linkedSignal, output, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  ElementRef,
+  linkedSignal,
+  output,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { debounce, form, FormField, FormRoot, minLength } from '@angular/forms/signals';
-import { parseSuggestions, Suggestion, suggestRequest } from '@app/pdok/suggest';
+import { NO_SUGGESTIONS, parseSuggestResult, Suggestion, suggestRequest } from '@app/pdok/suggest';
 
 const SEARCH_DEBOUNCE_MS = 300;
 const MIN_QUERY_LENGTH = 2;
@@ -10,6 +18,7 @@ const EXAMPLE = 'Damrak 1 Amsterdam';
 const SEARCH_ERROR = 'Er ging iets mis bij het zoeken. Probeer het opnieuw.';
 const SEARCHING = 'Zoeken…';
 const CLEARED = 'Zoekveld gewist';
+const DID_YOU_MEAN = 'Bedoelt u';
 
 function foundMessage(count: number): string {
   if (count === 0) {
@@ -38,6 +47,9 @@ export class AddressSearch {
 
   protected readonly hint = HINT;
   protected readonly example = EXAMPLE;
+  protected readonly didYouMean = DID_YOU_MEAN;
+
+  private readonly queryInput = viewChild.required<ElementRef<HTMLInputElement>>('queryInput');
 
   private readonly search = signal({ query: '' });
   protected readonly searchForm = form(this.search, (path) => {
@@ -50,17 +62,19 @@ export class AddressSearch {
     return query.valid() && query.value() !== this.chosen() ? query.value() : '';
   });
   protected readonly suggestions = httpResource(() => suggestRequest(this.validQuery()), {
-    parse: parseSuggestions,
-    defaultValue: [],
+    parse: parseSuggestResult,
+    defaultValue: NO_SUGGESTIONS,
   });
 
   private readonly results = linkedSignal({
     source: this.suggestions.snapshot,
-    computation: (snapshot, previous): Suggestion[] => {
+    computation: (snapshot, previous): readonly Suggestion[] => {
       if (snapshot.status === 'error') {
         return [];
       }
-      return snapshot.status === 'loading' && previous ? previous.value : snapshot.value;
+      return snapshot.status === 'loading' && previous
+        ? previous.value
+        : snapshot.value.suggestions;
     },
   });
   private readonly closed = linkedSignal({ source: this.results, computation: () => false });
@@ -79,6 +93,14 @@ export class AddressSearch {
     return index === undefined ? null : `address-option-${index}`;
   });
   protected readonly expanded = computed(() => this.options().length > 0);
+  protected readonly correction = computed(() => {
+    const query = this.searchForm.query();
+    const awaitingDebounce = query.controlValue() !== query.value();
+    return !awaitingDebounce && this.suggestions.status() === 'resolved'
+      ? this.suggestions.value().correction
+      : undefined;
+  });
+
   // Counts the results, not the options: closing the list with Escape keeps the results.
   protected readonly statusMessage = computed(() => {
     if (this.cleared()) {
@@ -87,14 +109,21 @@ export class AddressSearch {
     switch (this.suggestions.status()) {
       case 'error':
         return SEARCH_ERROR;
-      case 'resolved':
-        return foundMessage(this.results().length);
+      case 'resolved': {
+        const found = foundMessage(this.results().length);
+        return this.correction() ? `${found}.` : found;
+      }
       case 'loading':
         return SEARCHING;
       default:
         return '';
     }
   });
+
+  protected searchCorrection(correction: string): void {
+    this.searchForm.query().controlValue.set(correction);
+    this.queryInput().nativeElement.focus();
+  }
 
   protected choose(index: number): void {
     const suggestion = this.options()[index];
