@@ -1,7 +1,7 @@
 import { httpResource } from '@angular/common/http';
 import { Component, computed, linkedSignal, output, signal } from '@angular/core';
 import { debounce, form, FormField, FormRoot, minLength } from '@angular/forms/signals';
-import { parseSuggestions, Suggestion, suggestRequest } from '@app/pdok/suggest';
+import { NO_SUGGESTIONS, parseSuggestResult, Suggestion, suggestRequest } from '@app/pdok/suggest';
 
 const SEARCH_DEBOUNCE_MS = 300;
 const MIN_QUERY_LENGTH = 2;
@@ -50,17 +50,19 @@ export class AddressSearch {
     return query.valid() && query.value() !== this.chosen() ? query.value() : '';
   });
   protected readonly suggestions = httpResource(() => suggestRequest(this.validQuery()), {
-    parse: parseSuggestions,
-    defaultValue: [],
+    parse: parseSuggestResult,
+    defaultValue: NO_SUGGESTIONS,
   });
 
   private readonly results = linkedSignal({
     source: this.suggestions.snapshot,
-    computation: (snapshot, previous): Suggestion[] => {
+    computation: (snapshot, previous): readonly Suggestion[] => {
       if (snapshot.status === 'error') {
         return [];
       }
-      return snapshot.status === 'loading' && previous ? previous.value : snapshot.value;
+      return snapshot.status === 'loading' && previous
+        ? previous.value
+        : snapshot.value.suggestions;
     },
   });
   private readonly closed = linkedSignal({ source: this.results, computation: () => false });

@@ -11,6 +11,12 @@ const suggestResponse = z.object({
 
 export type Suggestion = z.infer<typeof suggestion>;
 
+export interface SuggestResult {
+  readonly suggestions: readonly Suggestion[];
+}
+
+export const NO_SUGGESTIONS: SuggestResult = { suggestions: [] };
+
 /** No request until there is something to search for. */
 export function suggestRequest(query: string): HttpResourceRequest | undefined {
   if (!query) {
@@ -20,6 +26,6 @@ export function suggestRequest(query: string): HttpResourceRequest | undefined {
 }
 
 /** Throws on an unexpected response, which puts the resource in its error state. */
-export function parseSuggestions(raw: unknown): Suggestion[] {
-  return suggestResponse.parse(raw).response.docs;
+export function parseSuggestResult(raw: unknown): SuggestResult {
+  return { suggestions: suggestResponse.parse(raw).response.docs };
 }
