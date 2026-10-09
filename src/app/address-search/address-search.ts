@@ -1,5 +1,13 @@
 import { httpResource } from '@angular/common/http';
-import { Component, computed, linkedSignal, output, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  ElementRef,
+  linkedSignal,
+  output,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { debounce, form, FormField, FormRoot, minLength } from '@angular/forms/signals';
 import { NO_SUGGESTIONS, parseSuggestResult, Suggestion, suggestRequest } from '@app/pdok/suggest';
 
@@ -40,6 +48,8 @@ export class AddressSearch {
   protected readonly hint = HINT;
   protected readonly example = EXAMPLE;
   protected readonly didYouMean = DID_YOU_MEAN;
+
+  private readonly queryInput = viewChild.required<ElementRef<HTMLInputElement>>('queryInput');
 
   private readonly search = signal({ query: '' });
   protected readonly searchForm = form(this.search, (path) => {
@@ -107,6 +117,11 @@ export class AddressSearch {
         return '';
     }
   });
+
+  protected searchCorrection(correction: string): void {
+    this.searchForm.query().controlValue.set(correction);
+    this.queryInput().nativeElement.focus();
+  }
 
   protected choose(index: number): void {
     const suggestion = this.options()[index];
