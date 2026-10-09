@@ -94,9 +94,7 @@ export class AddressSearch {
   });
   protected readonly expanded = computed(() => this.options().length > 0);
   protected readonly correction = computed(() =>
-    !this.cleared() && this.suggestions.status() === 'resolved'
-      ? this.suggestions.value().correction
-      : undefined,
+    this.suggestions.status() === 'resolved' ? this.suggestions.value().correction : undefined,
   );
 
   // Counts the results, not the options: closing the list with Escape keeps the results.
