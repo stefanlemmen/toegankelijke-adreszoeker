@@ -27,6 +27,7 @@ import {
   SUGGEST_DAMRAK,
   SUGGEST_DAMRAK_201,
   SUGGEST_DARMAK,
+  SUGGEST_DARMAK_18_AMSTERDM,
   SUGGEST_NONE,
 } from '@testing/pdok-fixtures';
 import { isLookupRequestFor, isSuggestRequestFor } from '@testing/pdok-requests';
@@ -383,6 +384,15 @@ describe('App', () => {
     expect(statusMessages(page)).toEqual(['Geen adressen gevonden. Bedoelt u damrak?']);
     expect(buttonNamed(page, 'damrak').closest('[role="status"]')).not.toBeNull();
     expect(await axeViolations(page)).toEqual([]);
+  });
+
+  it('suggests the longest correction when corrections have equal hits', async () => {
+    (await searchFor(page, 'Darmak 18 amsterdm')).flush(SUGGEST_DARMAK_18_AMSTERDM);
+    await advance();
+
+    expect(statusMessages(page)).toEqual([
+      'Geen adressen gevonden. Bedoelt u damrak 18 amsterdam?',
+    ]);
   });
 
   it('announces that the field was cleared with Escape', async () => {

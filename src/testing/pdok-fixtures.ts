@@ -40,6 +40,23 @@ export const SUGGEST_DARMAK = {
   },
 };
 
+/** `suggest?q=Darmak 18 amsterdm&fq=type:adres`: no matches, three corrections with equal hits. */
+export const SUGGEST_DARMAK_18_AMSTERDM = {
+  response: {
+    docs: [],
+  },
+  spellcheck: {
+    collations: [
+      'collation',
+      { collationQuery: 'damrak 18 amsterda', hits: 2 },
+      'collation',
+      { collationQuery: 'damrak 18 amsterdam', hits: 2 },
+      'collation',
+      { collationQuery: 'damrak 18 amsterd', hits: 2 },
+    ],
+  },
+};
+
 /** `lookup?id=adr-damrak-18-1`: an address without a postcode. */
 export const LOOKUP_DAMRAK_18_1 = {
   response: {
