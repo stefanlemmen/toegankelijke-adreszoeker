@@ -83,10 +83,10 @@ export function buttonNamed(root: HTMLElement, name: string): HTMLButtonElement 
   return button;
 }
 
-/** The text of every `role="status"` live region, in document order; empty ones included. */
+/** The rendered text of every `role="status"` live region, in document order; empty ones included. */
 export function statusMessages(root: HTMLElement): string[] {
   return [...root.querySelectorAll('[role="status"]')].map(
-    (status) => status.textContent?.trim() ?? '',
+    (status) => status.textContent?.replace(/\s+/g, ' ').trim() ?? '',
   );
 }
 
