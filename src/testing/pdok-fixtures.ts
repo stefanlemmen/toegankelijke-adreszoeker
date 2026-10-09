@@ -23,6 +23,23 @@ export const SUGGEST_NONE = {
   },
 };
 
+/** `suggest?q=darmak&fq=type:adres`: no matches, three corrections, not sorted by hits. */
+export const SUGGEST_DARMAK = {
+  response: {
+    docs: [],
+  },
+  spellcheck: {
+    collations: [
+      'collation',
+      { collationQuery: 'damrak', hits: 271 },
+      'collation',
+      { collationQuery: 'dormak', hits: 2 },
+      'collation',
+      { collationQuery: 'damak', hits: 47 },
+    ],
+  },
+};
+
 /** `lookup?id=adr-damrak-18-1`: an address without a postcode. */
 export const LOOKUP_DAMRAK_18_1 = {
   response: {

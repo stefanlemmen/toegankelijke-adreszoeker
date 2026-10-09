@@ -9,6 +9,7 @@ import { axeViolations } from '@testing/axe';
 import {
   activeOptionOf,
   advance,
+  buttonNamed,
   definitionOf,
   descriptionOf,
   elementWithText,
@@ -25,6 +26,7 @@ import {
   LOOKUP_NOT_FOUND,
   SUGGEST_DAMRAK,
   SUGGEST_DAMRAK_201,
+  SUGGEST_DARMAK,
   SUGGEST_NONE,
 } from '@testing/pdok-fixtures';
 import { isLookupRequestFor, isSuggestRequestFor } from '@testing/pdok-requests';
@@ -372,6 +374,15 @@ describe('App', () => {
     await advance();
 
     expect(statusMessages(page)).toEqual([message]);
+  });
+
+  it('suggests the correction with the most hits when nothing is found', async () => {
+    (await searchFor(page, 'darmak')).flush(SUGGEST_DARMAK);
+    await advance();
+
+    expect(statusMessages(page)).toEqual(['Geen adressen gevonden. Bedoelt u damrak?']);
+    expect(buttonNamed(page, 'damrak').closest('[role="status"]')).not.toBeNull();
+    expect(await axeViolations(page)).toEqual([]);
   });
 
   it('announces that the field was cleared with Escape', async () => {
