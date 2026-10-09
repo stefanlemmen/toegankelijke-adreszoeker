@@ -93,9 +93,13 @@ export class AddressSearch {
     return index === undefined ? null : `address-option-${index}`;
   });
   protected readonly expanded = computed(() => this.options().length > 0);
-  protected readonly correction = computed(() =>
-    this.suggestions.status() === 'resolved' ? this.suggestions.value().correction : undefined,
-  );
+  protected readonly correction = computed(() => {
+    const query = this.searchForm.query();
+    const awaitingDebounce = query.controlValue() !== query.value();
+    return !awaitingDebounce && this.suggestions.status() === 'resolved'
+      ? this.suggestions.value().correction
+      : undefined;
+  });
 
   // Counts the results, not the options: closing the list with Escape keeps the results.
   protected readonly statusMessage = computed(() => {
