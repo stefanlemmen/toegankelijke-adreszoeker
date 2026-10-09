@@ -415,6 +415,23 @@ describe('App', () => {
     expect(statusMessages(page)).toEqual(['3 adressen gevonden']);
   });
 
+  it.each([
+    { how: 'activating it', act: () => buttonNamed(page, 'damrak').click() },
+    { how: 'typing', act: () => typeInto(inputLabelled(page, 'Adres'), 'darmakk') },
+  ])('removes the correction right after $how, before the debounce', async ({ act }) => {
+    (await searchFor(page, 'darmak')).flush(SUGGEST_DARMAK);
+    await advance();
+
+    act();
+    await advance();
+
+    expect(statusMessages(page)).toEqual(['Geen adressen gevonden']);
+    expect(page.querySelector('button')).toBeNull();
+
+    await advance(DEBOUNCE_MS);
+    http.expectOne(() => true).flush(SUGGEST_NONE);
+  });
+
   it('removes the correction when the field is cleared with Escape', async () => {
     const combobox = inputLabelled(page, 'Adres');
     (await searchFor(page, 'darmak')).flush(SUGGEST_DARMAK);
