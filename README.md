@@ -77,6 +77,7 @@ Zo klinkt de adreszoeker met VoiceOver in Safari op macOS (oktober 2026). VoiceO
 | Opnieuw `damrak` typen, dan Escape | "collapsed, damrak"                                                                                       |
 | Nog een keer Escape                | "Zoekveld gewist"                                                                                         |
 | `xqzvw` typen (bestaat niet)       | "Geen adressen gevonden"                                                                                  |
+| `darmak` typen (tikfout)           | "Geen adressen gevonden. Bedoelt u damrak ?"                                                              |
 | Rotor (VO+U), Landmarks            | `main`, `search` en `content information`                                                                 |
 
 Na het kiezen lees je met VO+→ eerst de kop ("heading level 2, Gekozen adres") en daarna de details als "description list 5 items", gevolgd door elk label en elke waarde.
