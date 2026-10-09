@@ -53,7 +53,14 @@ function correctionFrom(raw: unknown): string | undefined {
     return parsed.success ? [parsed.data] : [];
   });
   return collations.reduce<Collation | undefined>(
-    (best, candidate) => (!best || candidate.hits > best.hits ? candidate : best),
+    (best, candidate) => (!best || isBetter(candidate, best) ? candidate : best),
     undefined,
   )?.collationQuery;
+}
+
+function isBetter(candidate: Collation, best: Collation): boolean {
+  if (candidate.hits !== best.hits) {
+    return candidate.hits > best.hits;
+  }
+  return candidate.collationQuery.length > best.collationQuery.length;
 }
