@@ -9,6 +9,7 @@ import { axeViolations } from '@testing/axe';
 import {
   activeOptionOf,
   advance,
+  boldTextsOf,
   buttonNamed,
   definitionOf,
   descriptionOf,
@@ -26,9 +27,11 @@ import {
   LOOKUP_NOT_FOUND,
   SUGGEST_DAMRAK,
   SUGGEST_DAMRAK_201,
+  SUGGEST_DAMRAK_UNEXPECTED_HIGHLIGHTING,
   SUGGEST_DARMAK,
   SUGGEST_DARMAK_18_AMSTERDM,
   SUGGEST_NONE,
+  SUGGEST_SPUI_70,
 } from '@testing/pdok-fixtures';
 import { isLookupRequestFor, isSuggestRequestFor } from '@testing/pdok-requests';
 import { App } from './app';
@@ -287,6 +290,45 @@ describe('App', () => {
     expect(page.textContent).toContain('Damrak 18-1, Amsterdam');
     expect(page.textContent).toContain('Damrak 201, Amsterdam');
     expect(page.textContent).toContain('Damrak 1, 1012LG Amsterdam');
+  });
+
+  it('shows the matches in each suggestion in bold, keeping the name of the option', async () => {
+    const combobox = inputLabelled(page, 'Adres');
+    (await searchFor(page, 'damrak')).flush(SUGGEST_DAMRAK);
+    await advance();
+
+    expect(boldTextsOf(page, combobox)).toEqual([['Damrak'], ['Damrak'], ['Damrak']]);
+    expect(optionsOf(page, combobox)).toEqual([
+      'Damrak 18-1, Amsterdam',
+      'Damrak 201, Amsterdam',
+      'Damrak 1, 1012LG Amsterdam',
+    ]);
+    expect(await axeViolations(page)).toEqual([]);
+  });
+
+  it('shows the special characters in a suggestion as characters, not as codes', async () => {
+    const combobox = inputLabelled(page, 'Adres');
+    (await searchFor(page, 's-gravenhage spui 70')).flush(SUGGEST_SPUI_70);
+    await advance();
+
+    expect(optionsOf(page, combobox)).toEqual(["Spui 70, 2511BT 's-Gravenhage"]);
+    expect(boldTextsOf(page, combobox)).toEqual([['Spui', '70', 's', 'Gravenhage']]);
+  });
+
+  it('shows a suggestion without bold when its matches are missing or unexpected', async () => {
+    const combobox = inputLabelled(page, 'Adres');
+    (await searchFor(page, 'damrak')).flush(SUGGEST_DAMRAK_UNEXPECTED_HIGHLIGHTING);
+    await advance();
+
+    expect(optionsOf(page, combobox)).toEqual([
+      'Damrak 18-1, Amsterdam',
+      'Damrak 201, Amsterdam',
+      'Damrak 1, 1012LG Amsterdam',
+      'Damrak 5, 1012LG Amsterdam',
+    ]);
+    expect(boldTextsOf(page, combobox)).toEqual([['Damrak'], [], [], []]);
+    // Markup from PDOK is never rendered as markup.
+    expect(page.querySelector('[role="listbox"] img')).toBeNull();
   });
 
   it('keeps the previous suggestions while the next search loads', async () => {

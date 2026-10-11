@@ -44,15 +44,24 @@ export function definitionOf(root: HTMLElement, term: string): string {
   return dd.textContent?.trim() ?? '';
 }
 
-/** The option texts in the listbox that `combobox` controls through `aria-controls`. */
-export function optionsOf(root: HTMLElement, combobox: HTMLElement): string[] {
+function optionElementsOf(root: HTMLElement, combobox: HTMLElement): Element[] {
   const id = combobox.getAttribute('aria-controls');
   const listbox = [...root.querySelectorAll('[id]')].find((element) => element.id === id);
   if (!id || listbox?.getAttribute('role') !== 'listbox') {
     throw new Error('No listbox controlled by the combobox');
   }
-  return [...listbox.querySelectorAll('[role="option"]')].map(
-    (option) => option.textContent?.trim() ?? '',
+  return [...listbox.querySelectorAll('[role="option"]')];
+}
+
+/** The option texts in the listbox that `combobox` controls through `aria-controls`. */
+export function optionsOf(root: HTMLElement, combobox: HTMLElement): string[] {
+  return optionElementsOf(root, combobox).map((option) => option.textContent?.trim() ?? '');
+}
+
+/** Per option in the listbox that `combobox` controls, the texts it shows in bold (`<b>`). */
+export function boldTextsOf(root: HTMLElement, combobox: HTMLElement): string[][] {
+  return optionElementsOf(root, combobox).map((option) =>
+    [...option.querySelectorAll('b')].map((bold) => bold.textContent ?? ''),
   );
 }
 

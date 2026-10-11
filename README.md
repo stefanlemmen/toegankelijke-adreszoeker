@@ -8,7 +8,7 @@ Een toegankelijke adreszoeker voor Nederlandse adressen, gebouwd volgens het com
 
 ## Wat de app doet
 
-- Typ minstens 2 tekens van een adres; na een korte pauze verschijnen maximaal 10 suggesties van de PDOK Locatieserver.
+- Typ minstens 2 tekens van een adres; na een korte pauze verschijnen maximaal 10 suggesties van de PDOK Locatieserver. Wat overeenkomt met je zoekvraag staat vet, zoals PDOK het aangeeft.
 - Vindt een zoekvraag niets door een tikfout, dan stelt de app een correctie voor: "Geen adressen gevonden. Bedoelt u damrak?". Kies je die, dan zoekt de app opnieuw met de correctie.
 - Kies een suggestie met muis of toetsenbord; daaronder verschijnen straat, huisnummer, postcode, woonplaats en gemeente.
 - Een kaart naast het zoekpaneel (op een smal scherm eronder) toont waar het gekozen adres ligt; daarvoor een kaart van Nederland.
@@ -45,6 +45,7 @@ Een screenreader ziet geen kleuren of posities, alleen wat de HTML erover vertel
 - **`aria-describedby`**: koppelt de hint "Minimaal 2 tekens, bijvoorbeeld: Damrak 1 Amsterdam" aan het veld, zodat de screenreader die voorleest zodra het veld de focus krijgt.
 - **`role="status"`**: een vaste regel onder het veld voor meldingen ("Zoeken…", "3 adressen gevonden", "Geen adressen gevonden", foutmeldingen). De screenreader leest die voor zonder dat de focus verspringt. De regel staat er altijd, ook leeg, omdat screenreaders een melding kunnen missen als de regel tegelijk met de tekst verschijnt.
 - **Een `<button>` voor de correctie**, in de statusregel en opgemaakt als link. Het is een knop omdat hij iets op de pagina doet (opnieuw zoeken) en niet naar een andere pagina gaat. De correctie staat zo één keer op de pagina en wordt samen met "Geen adressen gevonden" voorgelezen.
+- **`<b>` voor wat overeenkomt met je zoekvraag**, alleen vet. Geen `<mark>`, omdat sommige screenreaders daarbij "gemarkeerd" zeggen. De naam van een suggestie blijft het hele adres.
 
 **Waarom de focus in het veld blijft:** zo kun je gewoon doortypen of je zoekvraag verbeteren terwijl je door de suggesties loopt. De suggesties zelf zijn daarom niet met Tab bereikbaar; dat is bewust en volgens het patroon.
 
@@ -79,6 +80,8 @@ Zo klinkt de adreszoeker met VoiceOver in Safari op macOS (oktober 2026). VoiceO
 | `xqzvw` typen (bestaat niet)       | "Geen adressen gevonden"                                                                                  |
 | `darmak` typen (tikfout)           | "Geen adressen gevonden. Bedoelt u damrak ?"                                                              |
 | Rotor (VO+U), Landmarks            | `main`, `search` en `content information`                                                                 |
+
+Vette delen in een suggestie veranderen niets aan wat VoiceOver zegt: elke suggestie klinkt als één naam.
 
 Na het kiezen lees je met VO+→ eerst de kop ("heading level 2, Gekozen adres") en daarna de details als "description list 5 items", gevolgd door elk label en elke waarde.
 
@@ -120,7 +123,7 @@ Als er resultaten zijn, zegt VoiceOver "expanded, list 10 items" en slaat het de
 | 1.3.3 Sensory Characteristics                              | A      | Voldoet   | Instructies verwijzen niet naar vorm, plek of geluid.                                                                                                                                                                            |
 | 1.3.4 Orientation                                          | AA     | Voldoet   | Werkt staand en liggend; de oriëntatie ligt niet vast.                                                                                                                                                                           |
 | 1.3.5 Identify Input Purpose                               | AA     | N.v.t.    | Het zoekveld vraagt een willekeurig adres, geen gegevens over de gebruiker zelf.                                                                                                                                                 |
-| 1.4.1 Use of Color                                         | A      | Voldoet   | De actieve suggestie heeft een rand én een achtergrondkleur; de links zijn onderstreept; de marker is herkenbaar aan zijn vorm.                                                                                                  |
+| 1.4.1 Use of Color                                         | A      | Voldoet   | De actieve suggestie heeft een rand én een achtergrondkleur; wat overeenkomt met de zoekvraag is vet, niet gekleurd; de links zijn onderstreept; de marker is herkenbaar aan zijn vorm.                                          |
 | 1.4.2 Audio Control                                        | A      | N.v.t.    | Geen audio.                                                                                                                                                                                                                      |
 | 1.4.3 Contrast (Minimum)                                   | AA     | Voldoet   | Tekst minstens 12:1, hint en status minstens 6,8:1, links in de footer 7,3:1; licht en donker. Namen op de kaart horen bij een afbeelding met veel andere visuele inhoud en vallen onder de uitzondering.                        |
 | 1.4.4 Resize Text                                          | AA     | Voldoet   | 200% tekstgrootte zonder verlies van inhoud (zie bekende beperkingen over browserzoom).                                                                                                                                          |
@@ -164,6 +167,7 @@ Als er resultaten zijn, zegt VoiceOver "expanded, list 10 items" en slaat het de
 
 - **Angular 22**, zoneless, met signals, signal forms en `httpResource` voor de API-aanroepen.
 - **Zod** (`zod/mini`) controleert de antwoorden van PDOK zodra ze binnenkomen; `zod/mini` omdat de klassieke API de bundel te groot maakte.
+- **Vet zonder `innerHTML`:** PDOK markeert de overeenkomst met HTML (`<b>`). De app leest die met `DOMParser` en toont alleen tekst; klopt de markering niet, dan staat de suggestie er zonder vet.
 - **Eigen combobox, geen UI-bibliotheek:** zo is elk ARIA-attribuut zichtbaar, getest en uit te leggen.
 - **Tests via de DOM**, zoals een gebruiker de app ziet (Vitest, axe-core); alleen de netwerkverzoeken worden gesimuleerd, met echte, ingekorte PDOK-antwoorden.
 - **Kaart zonder kaartbibliotheek:** statische tegels van de PDOK BRT Achtergrondkaart als raster van `<img>`; de app berekent uit de coördinaten welke tegels nodig zijn, en CSS zet het adres precies in het midden. Geen nieuwe dependency.

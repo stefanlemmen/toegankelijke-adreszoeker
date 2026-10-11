@@ -31,7 +31,13 @@
         (mousedown)="$event.preventDefault()"
         (click)="choose($index)"
       >
-        {{ suggestion.weergavenaam }}
+        @for (segment of suggestion.segments; track $index) {
+          @if (segment.match) {
+            <b>{{ segment.text }}</b>
+          } @else {
+            <span>{{ segment.text }}</span>
+          }
+        }
       </li>
     }
   </ul>
