@@ -66,6 +66,8 @@ input {
 /* Looks like the other links, but is a button: it acts on the page instead of navigating (WCAG 4.1.2). */
 [role='status'] button {
   padding: 0;
+  /* Room for the focus outline before the "?"; on the left, the space in the sentence gives that room. */
+  margin-inline-end: var(--focus-outline-width);
   border: 0;
   font: inherit;
   color: var(--color-accent);
